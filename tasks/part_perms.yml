@@ -7,8 +7,11 @@
         regexp: '^/dev/vda7\s+/tmp\s+'
         line: '/dev/vda7 /tmp ext4 defaults,noexec,nodev,nosuid 0 2'
         backup: yes
-      notify:
-        - Remount /tmp
+      register: tmp_fstab_change
+    - name: Remount /tmp if required
+      ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /tmp
+      when: tmp_fstab_change.changed
+      changed_when: false
 
     - name: Ensure /var is mounted with nodev and nosuid
       ansible.builtin.lineinfile:
@@ -16,8 +19,11 @@
         regexp: '^/dev/vda3\s+/var\s+'
         line: '/dev/vda3 /var ext4 defaults,nodev,nosuid 0 2'
         backup: yes
-      notify:
-        - Remount /var
+      register: var_fstab_change
+    - name: Remount /var if required
+      ansible.builtin.command: mount -o remount,nodev,nosuid /var
+      when: var_fstab_change.changed
+      changed_when: false
 
     - name: Ensure /var/tmp is mounted with noexec, nodev, and nosuid
       ansible.builtin.lineinfile:
@@ -25,8 +31,11 @@
         regexp: '^/dev/vda6\s+/var/tmp\s+'
         line: '/dev/vda6 /var/tmp ext4 defaults,noexec,nodev,nosuid 0 2'
         backup: yes
-      notify:
-        - Remount /var/tmp
+      register: var_tmp_fstab_change
+    - name: Remount /var/tmp if required
+      ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /var/tmp
+      when: var_tmp_fstab_change.changed
+      changed_when: false
 
     - name: Ensure /var/log is mounted with noexec, nodev, and nosuid
       ansible.builtin.lineinfile:
@@ -34,8 +43,11 @@
         regexp: '^/dev/vda4\s+/var/log\s+'
         line: '/dev/vda4 /var/log ext4 defaults,noexec,nodev,nosuid 0 2'
         backup: yes
-      notify:
-        - Remount /var/log
+      register: var_log_fstab_change
+    - name: Remount /var/log if required
+      ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /var/log
+      when: var_log_fstab_change.changed
+      changed_when: false
 
     - name: Ensure /var/log/audit is mounted with noexec, nodev, and nosuid
       ansible.builtin.lineinfile:
@@ -43,8 +55,11 @@
         regexp: '^/dev/vda5\s+/var/log/audit\s+'
         line: '/dev/vda5 /var/log/audit ext4 defaults,noexec,nodev,nosuid 0 2'
         backup: yes
-      notify:
-        - Remount /var/log/audit
+      register: var_log_audit_fstab_change
+    - name: Remount /var/log/audit if required
+      ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /var/log/audit
+      when: var_log_audit_fstab_change.changed
+      changed_when: false
 
     - name: Ensure /home is mounted with nodev and nosuid
       ansible.builtin.lineinfile:
@@ -52,36 +67,8 @@
         regexp: '^/dev/vda6\s+/home\s+'
         line: '/dev/vda6 /home ext4 defaults,nodev,nosuid 0 2'
         backup: yes
-      notify:
-        - Remount /home
-
-  handlers:
-    - name: Remount /tmp
-      ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /tmp
-      when: ansible_facts.mounts | selectattr('mount', 'equalto', '/tmp') | map(attribute='options') | select('search', 'noexec') | list | length == 0
-      changed_when: false
-
-    - name: Remount /var
-      ansible.builtin.command: mount -o remount,nodev,nosuid /var
-      when: ansible_facts.mounts | selectattr('mount', 'equalto', '/var') | map(attribute='options') | select('search', 'nodev') | select('search', 'nosuid') | list | length < 2
-      changed_when: false
-
-    - name: Remount /var/tmp
-      ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /var/tmp
-      when: ansible_facts.mounts | selectattr('mount', 'equalto', '/var/tmp') | map(attribute='options') | select('search', 'noexec') | list | length == 0
-      changed_when: false
-
-    - name: Remount /var/log
-      ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /var/log
-      when: ansible_facts.mounts | selectattr('mount', 'equalto', '/var/log') | map(attribute='options') | select('search', 'noexec') | list | length == 0
-      changed_when: false
-
-    - name: Remount /var/log/audit
-      ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /var/log/audit
-      when: ansible_facts.mounts | selectattr('mount', 'equalto', '/var/log/audit') | map(attribute='options') | select('search', 'noexec') | list | length == 0
-      changed_when: false
-
-    - name: Remount /home
+      register: home_fstab_change
+    - name: Remount /home if required
       ansible.builtin.command: mount -o remount,nodev,nosuid /home
-      when: ansible_facts.mounts | selectattr('mount', 'equalto', '/home') | map(attribute='options') | select('search', 'nodev') | select('search', 'nosuid') | list | length < 2
+      when: home_fstab_change.changed
       changed_when: false
