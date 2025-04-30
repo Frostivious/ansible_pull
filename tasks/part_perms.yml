@@ -1,11 +1,22 @@
 - name: Ensure mount points have required mount options
   become: yes
-  block:
+  gather_facts: yes  # Ensures ansible_facts are gathered
+  tasks:
+    - name: Get the current mount points
+      ansible.builtin.set_fact:
+        mount_points:
+          tmp_mount: "{{ ansible_mounts | selectattr('mount', 'equalto', '/tmp') | map(attribute='device') | first }}"
+          var_mount: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var') | map(attribute='device') | first }}"
+          var_tmp_mount: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/tmp') | map(attribute='device') | first }}"
+          var_log_mount: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/log') | map(attribute='device') | first }}"
+          var_log_audit_mount: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/log/audit') | map(attribute='device') | first }}"
+          home_mount: "{{ ansible_mounts | selectattr('mount', 'equalto', '/home') | map(attribute='device') | first }}"
+
     - name: Ensure /tmp is mounted with noexec, nodev, and nosuid
       ansible.builtin.lineinfile:
         path: /etc/fstab
-        regexp: '^/dev/vda7\s+/tmp\s+'
-        line: '/dev/vda7 /tmp ext4 defaults,noexec,nodev,nosuid 0 2'
+        regexp: "^{{ mount_points.tmp_mount }}\s+/tmp\s+"
+        line: "{{ mount_points.tmp_mount }} /tmp ext4 defaults,noexec,nodev,nosuid 0 2"
         backup: yes
       register: tmp_fstab_change
     - name: Remount /tmp if required
@@ -16,8 +27,8 @@
     - name: Ensure /var is mounted with nodev and nosuid
       ansible.builtin.lineinfile:
         path: /etc/fstab
-        regexp: '^/dev/vda3\s+/var\s+'
-        line: '/dev/vda3 /var ext4 defaults,nodev,nosuid 0 2'
+        regexp: "^{{ mount_points.var_mount }}\s+/var\s+"
+        line: "{{ mount_points.var_mount }} /var ext4 defaults,nodev,nosuid 0 2"
         backup: yes
       register: var_fstab_change
     - name: Remount /var if required
@@ -28,8 +39,8 @@
     - name: Ensure /var/tmp is mounted with noexec, nodev, and nosuid
       ansible.builtin.lineinfile:
         path: /etc/fstab
-        regexp: '^/dev/vda6\s+/var/tmp\s+'
-        line: '/dev/vda6 /var/tmp ext4 defaults,noexec,nodev,nosuid 0 2'
+        regexp: "^{{ mount_points.var_tmp_mount }}\s+/var/tmp\s+"
+        line: "{{ mount_points.var_tmp_mount }} /var/tmp ext4 defaults,noexec,nodev,nosuid 0 2"
         backup: yes
       register: var_tmp_fstab_change
     - name: Remount /var/tmp if required
@@ -40,8 +51,8 @@
     - name: Ensure /var/log is mounted with noexec, nodev, and nosuid
       ansible.builtin.lineinfile:
         path: /etc/fstab
-        regexp: '^/dev/vda4\s+/var/log\s+'
-        line: '/dev/vda4 /var/log ext4 defaults,noexec,nodev,nosuid 0 2'
+        regexp: "^{{ mount_points.var_log_mount }}\s+/var/log\s+"
+        line: "{{ mount_points.var_log_mount }} /var/log ext4 defaults,noexec,nodev,nosuid 0 2"
         backup: yes
       register: var_log_fstab_change
     - name: Remount /var/log if required
@@ -52,8 +63,8 @@
     - name: Ensure /var/log/audit is mounted with noexec, nodev, and nosuid
       ansible.builtin.lineinfile:
         path: /etc/fstab
-        regexp: '^/dev/vda5\s+/var/log/audit\s+'
-        line: '/dev/vda5 /var/log/audit ext4 defaults,noexec,nodev,nosuid 0 2'
+        regexp: "^{{ mount_points.var_log_audit_mount }}\s+/var/log/audit\s+"
+        line: "{{ mount_points.var_log_audit_mount }} /var/log/audit ext4 defaults,noexec,nodev,nosuid 0 2"
         backup: yes
       register: var_log_audit_fstab_change
     - name: Remount /var/log/audit if required
@@ -64,8 +75,8 @@
     - name: Ensure /home is mounted with nodev and nosuid
       ansible.builtin.lineinfile:
         path: /etc/fstab
-        regexp: '^/dev/vda6\s+/home\s+'
-        line: '/dev/vda6 /home ext4 defaults,nodev,nosuid 0 2'
+        regexp: "^{{ mount_points.home_mount }}\s+/home\s+"
+        line: "{{ mount_points.home_mount }} /home ext4 defaults,nodev,nosuid 0 2"
         backup: yes
       register: home_fstab_change
     - name: Remount /home if required
