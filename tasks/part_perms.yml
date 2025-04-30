@@ -1,13 +1,81 @@
-- name: Ensure /tmp is mounted with noexec
+- name: Ensure mount points have required mount options
   become: yes
   block:
-    - name: Ensure /tmp mount entry in fstab has noexec
+    - name: Ensure /tmp is mounted with noexec, nodev, and nosuid
       ansible.builtin.lineinfile:
         path: /etc/fstab
         regexp: '^/dev/vda7\s+/tmp\s+'
-        line: '/dev/vda7 /tmp ext4 defaults,noexec 0 2'
+        line: '/dev/vda7 /tmp ext4 defaults,noexec,nodev,nosuid 0 2'
         backup: yes
+      notify:
+        - Remount /tmp
 
-    - name: Remount /tmp with noexec
-      ansible.builtin.command: mount -o remount,noexec /tmp
-      changed_when: false  # Avoid false positives unless you want to track this
+    - name: Ensure /var is mounted with nodev and nosuid
+      ansible.builtin.lineinfile:
+        path: /etc/fstab
+        regexp: '^/dev/vda3\s+/var\s+'
+        line: '/dev/vda3 /var ext4 defaults,nodev,nosuid 0 2'
+        backup: yes
+      notify:
+        - Remount /var
+
+    - name: Ensure /var/tmp is mounted with noexec, nodev, and nosuid
+      ansible.builtin.lineinfile:
+        path: /etc/fstab
+        regexp: '^/dev/vda6\s+/var/tmp\s+'
+        line: '/dev/vda6 /var/tmp ext4 defaults,noexec,nodev,nosuid 0 2'
+        backup: yes
+      notify:
+        - Remount /var/tmp
+
+    - name: Ensure /var/log is mounted with noexec, nodev, and nosuid
+      ansible.builtin.lineinfile:
+        path: /etc/fstab
+        regexp: '^/dev/vda4\s+/var/log\s+'
+        line: '/dev/vda4 /var/log ext4 defaults,noexec,nodev,nosuid 0 2'
+        backup: yes
+      notify:
+        - Remount /var/log
+
+    - name: Ensure /var/log/audit is mounted with noexec, nodev, and nosuid
+      ansible.builtin.lineinfile:
+        path: /etc/fstab
+        regexp: '^/dev/vda5\s+/var/log/audit\s+'
+        line: '/dev/vda5 /var/log/audit ext4 defaults,noexec,nodev,nosuid 0 2'
+        backup: yes
+      notify:
+        - Remount /var/log/audit
+
+    - name: Ensure /home is mounted with nodev and nosuid
+      ansible.builtin.lineinfile:
+        path: /etc/fstab
+        regexp: '^/dev/vda6\s+/home\s+'
+        line: '/dev/vda6 /home ext4 defaults,nodev,nosuid 0 2'
+        backup: yes
+      notify:
+        - Remount /home
+
+  handlers:
+    - name: Remount /tmp
+      ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /tmp
+      changed_when: false
+
+    - name: Remount /var
+      ansible.builtin.command: mount -o remount,nodev,nosuid /var
+      changed_when: false
+
+    - name: Remount /var/tmp
+      ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /var/tmp
+      changed_when: false
+
+    - name: Remount /var/log
+      ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /var/log
+      changed_when: false
+
+    - name: Remount /var/log/audit
+      ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /var/log/audit
+      changed_when: false
+
+    - name: Remount /home
+      ansible.builtin.command: mount -o remount,nodev,nosuid /home
+      changed_when: false
