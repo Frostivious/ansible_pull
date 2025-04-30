@@ -1,53 +1,13 @@
-- name: restrict /tmp
+- name: Check current mount options for /tmp
+  command: mount | grep 'on /tmp '
+  register: tmp_mount
+
+- name: Remount /tmp with secure options if needed
   ansible.posix.mount:
     path: /tmp
     src: /dev/vda7
     fstype: ext4
-    state: mounted
     opts: noexec,nodev,nosuid
+    state: remounted
     fstab: yes
-
-- name: restrict /var
-  ansible.posix.mount:
-    path: /var
-    src: /dev/vda3
-    fstype: ext4
-    state: mounted
-    opts: nodev,nosuid
-    fstab: yes
-
-- name: restrict /var/tmp
-  ansible.posix.mount:
-    path: /var/tmp
-    src: /dev/vda6
-    fstype: ext4
-    state: mounted
-    opts: noexec,nodev,nosuid
-    fstab: yes
-
-- name: restrict /var/log
-  ansible.posix.mount:
-    path: /var/log
-    src: /dev/vda4
-    fstype: ext4
-    state: mounted
-    opts: noexec,nodev,nosuid
-    fstab: yes
-
-- name: restrict /var/log/audit
-  ansible.posix.mount:
-    path: /var/log/audit
-    src: /dev/vda5
-    fstype: ext4
-    state: mounted
-    opts: noexec,nodev,nosuid
-    fstab: yes
-
-- name: restrict /home
-  ansible.posix.mount:
-    path: /home
-    src: /dev/vda8
-    fstype: ext4
-    state: mounted
-    opts: nodev,nosuid
-    fstab: yes
+  when: "'noexec' not in tmp_mount.stdout or 'nosuid' not in tmp_mount.stdout or 'nodev' not in tmp_mount.stdout"
