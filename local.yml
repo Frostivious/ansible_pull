@@ -3,6 +3,10 @@
   become: true
 
   tasks:
-  - name: Install htop
+  - name: Install Packages
     apt:
-      name: htop
+      name:
+        - htop
+        - gnupg
+        - apt-transport-https
+        - python3-pip
