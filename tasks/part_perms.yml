@@ -1,15 +1,13 @@
-- name: Check current mount options for /tmp
-  shell: mount | grep 'on /tmp '
-  register: tmp_mount
-  changed_when: false
-  failed_when: false
+- name: Ensure /tmp is mounted with noexec
+  become: yes
+  block:
+    - name: Ensure /tmp mount entry in fstab has noexec
+      ansible.builtin.lineinfile:
+        path: /etc/fstab
+        regexp: '^/dev/vda7\s+/tmp\s+'
+        line: '/dev/vda7 /tmp ext4 defaults,noexec 0 2'
+        backup: yes
 
-- name: Remount /tmp with secure options if needed
-  ansible.posix.mount:
-    path: /tmp
-    src: /dev/vda7
-    fstype: ext4
-    opts: noexec,nodev,nosuid
-    state: remounted
-    fstab: yes
-  when: "'noexec' not in tmp_mount.stdout or 'nosuid' not in tmp_mount.stdout or 'nodev' not in tmp_mount.stdout"
+    - name: Remount /tmp with noexec
+      ansible.builtin.command: mount -o remount,noexec /tmp
+      changed_when: false  # Avoid false positives unless you want to track this
