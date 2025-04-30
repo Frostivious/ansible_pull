@@ -1,42 +1,42 @@
 - name: Ensure Different Partitions are restricted
   mount:
-    name: /tmp
-    src: none
-    fstype: tmpfs
+    path: /tmp
+    src: /dev/vda7
+    fstype: ext4
     state: mounted
     opts: noexec,nodev,nosuid
 
   mount:
-    name: /var
-    src: none
-    fstype: tmpfs
+    path: /var
+    src: /dev/vda3
+    fstype: ext4
     state: mounted
     opts: nodev,nosuid
 
   mount:
-    name: /var/tmp
-    src: none
-    fstype: tmpfs
+    path: /var/tmp
+    src: /dev/vda6
+    fstype: ext4
     state: mounted
     opts: noexec,nodev,nosuid
 
   mount:
-    name: /var/log
-    src: none
-    fstype: tmpfs
+    path: /var/log
+    src: /dev/vda4
+    fstype: ext4
     state: mounted
     opts: noexec,nodev,nosuid
 
   mount:
-    name: /var/log/audit
-    src: none
-    fstype: tmpfs
+    path: /var/log/audit
+    src: /dev/vda5
+    fstype: ext4
     state: mounted
     opts: noexec,nodev,nosuid
 
   mount:
-    name: /home
-    src: none
-    fstype: tmpfs
+    path: /home
+    src: /dev/vda8
+    fstype: ext4
     state: mounted
     opts: nodev,nosuid
