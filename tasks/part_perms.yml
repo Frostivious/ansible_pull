@@ -5,6 +5,7 @@
     fstype: ext4
     state: mounted
     opts: noexec,nodev,nosuid
+    fstab: yes
 
   mount:
     path: /var
@@ -12,6 +13,7 @@
     fstype: ext4
     state: mounted
     opts: nodev,nosuid
+    fstab: yes
 
   mount:
     path: /var/tmp
@@ -19,6 +21,7 @@
     fstype: ext4
     state: mounted
     opts: noexec,nodev,nosuid
+    fstab: yes
 
   mount:
     path: /var/log
@@ -26,6 +29,7 @@
     fstype: ext4
     state: mounted
     opts: noexec,nodev,nosuid
+    fstab: yes
 
   mount:
     path: /var/log/audit
@@ -33,6 +37,7 @@
     fstype: ext4
     state: mounted
     opts: noexec,nodev,nosuid
+    fstab: yes
 
   mount:
     path: /home
@@ -40,3 +45,4 @@
     fstype: ext4
     state: mounted
     opts: nodev,nosuid
+    fstab: yes
