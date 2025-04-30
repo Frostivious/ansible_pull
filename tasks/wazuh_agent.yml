@@ -1,0 +1,41 @@
+- name: Check if Wazuh agent is installed
+  ansible.builtin.shell: dpkg -l | grep wazuh-agent
+  register: wazuh_installed
+  ignore_errors: true
+
+- name: Install Wazuh GPG key
+  ansible.builtin.shell: |
+    curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | \
+    gpg --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg --import && \
+    chmod 644 /usr/share/keyrings/wazuh.gpg
+  when: wazuh_installed.rc != 0
+
+- name: Add Wazuh repository
+  ansible.builtin.apt_repository:
+    repo: 'deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main'
+    filename: wazuh
+    state: present
+  when: wazuh_installed.rc != 0
+
+- name: Update APT cache
+  ansible.builtin.apt:
+    update_cache: yes
+  when: wazuh_installed.rc != 0
+
+- name: Install Wazuh agent
+  ansible.builtin.shell: |
+    WAZUH_MANAGER="192.168.1.22" apt-get install -y wazuh-agent
+  when: wazuh_installed.rc != 0
+
+- name: Enable Wazuh agent service
+  ansible.builtin.systemd:
+    name: wazuh-agent
+    enabled: yes
+    daemon_reload: yes
+  when: wazuh_installed.rc != 0
+
+- name: Start Wazuh agent service
+  ansible.builtin.systemd:
+    name: wazuh-agent
+    state: started
+  when: wazuh_installed.rc != 0
