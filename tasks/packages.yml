@@ -1,0 +1,7 @@
+- name: Install Packages
+  apt:
+    name:
+      - htop
+      - gnupg
+      - apt-transport-https
+      - python3-pip
