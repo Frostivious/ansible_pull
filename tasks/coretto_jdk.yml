@@ -1,0 +1,24 @@
+- name: Import Amazon Corretto GPG key
+  ansible.builtin.apt_key:
+    url: https://apt.corretto.aws/corretto.key
+    state: present
+
+- name: Add Amazon Corretto repository
+  ansible.builtin.apt_repository:
+    repo: "deb https://apt.corretto.aws stable main"
+    filename: amazon-corretto
+    state: present
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install Amazon Corretto JDK (latest available)
+  ansible.builtin.apt:
+    name: java-21-amazon-corretto-jdk
+    state: present
+
+- name: Ensure Java is available
+  ansible.builtin.command: java -version
+  register: java_check
+  changed_when: false
