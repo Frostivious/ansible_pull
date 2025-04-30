@@ -58,24 +58,30 @@
   handlers:
     - name: Remount /tmp
       ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /tmp
+      when: ansible_facts.mounts | selectattr('mount', 'equalto', '/tmp') | map(attribute='options') | select('search', 'noexec') | list | length == 0
       changed_when: false
 
     - name: Remount /var
       ansible.builtin.command: mount -o remount,nodev,nosuid /var
+      when: ansible_facts.mounts | selectattr('mount', 'equalto', '/var') | map(attribute='options') | select('search', 'nodev') | select('search', 'nosuid') | list | length < 2
       changed_when: false
 
     - name: Remount /var/tmp
       ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /var/tmp
+      when: ansible_facts.mounts | selectattr('mount', 'equalto', '/var/tmp') | map(attribute='options') | select('search', 'noexec') | list | length == 0
       changed_when: false
 
     - name: Remount /var/log
       ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /var/log
+      when: ansible_facts.mounts | selectattr('mount', 'equalto', '/var/log') | map(attribute='options') | select('search', 'noexec') | list | length == 0
       changed_when: false
 
     - name: Remount /var/log/audit
       ansible.builtin.command: mount -o remount,noexec,nodev,nosuid /var/log/audit
+      when: ansible_facts.mounts | selectattr('mount', 'equalto', '/var/log/audit') | map(attribute='options') | select('search', 'noexec') | list | length == 0
       changed_when: false
 
     - name: Remount /home
       ansible.builtin.command: mount -o remount,nodev,nosuid /home
+      when: ansible_facts.mounts | selectattr('mount', 'equalto', '/home') | map(attribute='options') | select('search', 'nodev') | select('search', 'nosuid') | list | length < 2
       changed_when: false
