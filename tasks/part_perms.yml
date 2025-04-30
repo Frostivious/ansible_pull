@@ -1,6 +1,8 @@
 - name: Check current mount options for /tmp
-  command: mount | grep 'on /tmp '
+  shell: mount | grep 'on /tmp '
   register: tmp_mount
+  changed_when: false
+  failed_when: false
 
 - name: Remount /tmp with secure options if needed
   ansible.posix.mount:
