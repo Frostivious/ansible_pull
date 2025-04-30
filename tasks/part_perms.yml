@@ -1,5 +1,5 @@
 - name: Ensure Different Partitions are restricted
-  mount:
+  ansible.posix.mount:
     path: /tmp
     src: /dev/vda7
     fstype: ext4
@@ -7,7 +7,7 @@
     opts: noexec,nodev,nosuid
     fstab: yes
 
-  mount:
+  ansible.posix.mount:
     path: /var
     src: /dev/vda3
     fstype: ext4
@@ -15,7 +15,7 @@
     opts: nodev,nosuid
     fstab: yes
 
-  mount:
+  ansible.posix.mount:
     path: /var/tmp
     src: /dev/vda6
     fstype: ext4
@@ -23,7 +23,7 @@
     opts: noexec,nodev,nosuid
     fstab: yes
 
-  mount:
+  ansible.posix.mount:
     path: /var/log
     src: /dev/vda4
     fstype: ext4
@@ -31,7 +31,7 @@
     opts: noexec,nodev,nosuid
     fstab: yes
 
-  mount:
+  ansible.posix.mount:
     path: /var/log/audit
     src: /dev/vda5
     fstype: ext4
@@ -39,7 +39,7 @@
     opts: noexec,nodev,nosuid
     fstab: yes
 
-  mount:
+  ansible.posix.mount:
     path: /home
     src: /dev/vda8
     fstype: ext4
