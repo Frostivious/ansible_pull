@@ -1,3 +1,4 @@
+---
 - name: Ensure mount points have required mount options
   become: yes
   gather_facts: yes  # Ensures ansible_facts are gathered
