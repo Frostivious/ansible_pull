@@ -1,11 +1,9 @@
-- name: "Setting Grub cfg to readonly"
+- name: Setting Grub cfg to readonly
   file:
     path: /boot/grub2/grub.cfg
-    mode: 0444
-  changed_on_missing: yes
+    mode: "0444"
 
-- name: "setting grub to readonly"
+- name: setting grub to readonly
   file:
     path: /boot/default/grub
-    mode: 0444
-  changed_on_missing: yes
+    mode: "0444"
