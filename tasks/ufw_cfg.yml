@@ -1,5 +1,5 @@
 - name: Enable UFW
-  command: ufw enable
+  command: sudo ufw enable
 
 - name: Allow incoming SSH connections
   command: ufw allow ssh
