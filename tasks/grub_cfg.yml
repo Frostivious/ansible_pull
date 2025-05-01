@@ -1,11 +1,11 @@
--name: Set Grub Cfg to readonly
-  - file:
-      path: /boot/grub2/grub.cfg
-      mode: 0444
-    changed_on_missing: yes
+- name: Set Grub Cfg to readonly
+  file:
+    path: /boot/grub2/grub.cfg
+    mode: 0444
+  changed_on_missing: yes
 
--name: Set Grub to be readonly
-  - file:
-      path: /boot/default/grub
-      mode: 0444
-    changed_on_missing: yes
+- name: Set Grub to be readonly
+  file:
+    path: /boot/default/grub
+    mode: 0444
+  changed_on_missing: yes
