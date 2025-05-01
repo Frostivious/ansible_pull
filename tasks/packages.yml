@@ -13,6 +13,7 @@
     name:
       - telnet
       - ntp
+      - telnetd
     state: absent
 
 - name: Removed unused dependencies
