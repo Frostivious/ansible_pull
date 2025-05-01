@@ -12,7 +12,6 @@
   command: ufw allow 587
   command: ufw allow 3306
   command: ufw allow 5432
-  command: ufw allow icmp
 
 - name: Set default UFW policy to deny incoming traffic
   command: ufw default deny incoming
