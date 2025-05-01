@@ -5,3 +5,16 @@
       - gnupg
       - apt-transport-https
       - python3-pip
+      - auditd
+      - audispd-plugins
+
+- name: Remove Packages
+  apt:
+    name:
+      - telnet
+      - ntp
+    state: absent
+
+- name: Removed unused dependencies
+  apt:
+    autoremove: true
