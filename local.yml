@@ -16,4 +16,4 @@
     - include_tasks: tasks/wazuh_agent.yml
     - include_tasks: tasks/coretto_jdk.yml
     - include_tasks: tasks/grub_cfg.yml
-    - include_tasks: tasks/ufy_cfg.yml
+    - include_tasks: tasks/ufw_cfg.yml
