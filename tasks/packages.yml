@@ -16,6 +16,8 @@
       - telnetd
       - inetutils-telnet
       - telnetd-ssl
+      - iptables
+
     state: absent
 
 - name: Removed unused dependencies
