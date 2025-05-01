@@ -16,7 +16,6 @@
       - telnetd
       - inetutils-telnet
       - telnetd-ssl
-      - iptables
 
     state: absent
 
