@@ -3,30 +3,32 @@
     state: enabled
   changed_when: "'enabled' not in ufw.status"
 
-- name: Allow incoming SSH connections
-  command: ufw allow ssh
-  when: "'22' not in lookup('pipe', 'ufw status')"
-
+- name: Allowed Ports
+  command: ufw allow 22
+  command: ufw allow 80
+  command: ufw allow 443
+  command: ufw allow 53
+  command: ufw allow 123
+  command: ufw allow 25
+  command: ufw allow 587
+  command: ufw allow 3306
+  command: ufw allow 5432
+  command: ufw allow icmp
+  
 - name: Set default UFW policy to deny incoming traffic
   command: ufw default deny incoming
-  when: "'default deny incoming' not in lookup('pipe', 'ufw status')"
 
 - name: Set default UFW policy to deny outgoing traffic
   command: ufw default deny outgoing
-  when: "'default deny outgoing' not in lookup('pipe', 'ufw status')"
 
 - name: Allow incoming loopback traffic
   command: ufw allow in on lo
-  when: "'ALLOW IN on lo' not in lookup('pipe', 'ufw status')"
-
+  
 - name: Allow outgoing loopback traffic
   command: ufw allow out on lo
-  when: "'ALLOW OUT on lo' not in lookup('pipe', 'ufw status')"
 
 - name: Deny incoming network interface traffic
   command: ufw deny in from 127.0.0.0/8
-  when: "'deny in from 127.0.0.0/8' not in lookup('pipe', 'ufw status')"
 
 - name: Deny incoming IPv6 traffic
   command: ufw deny in from ::1
-  when: "'deny in from ::1' not in lookup('pipe', 'ufw status')"
