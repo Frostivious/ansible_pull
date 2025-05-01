@@ -8,14 +8,26 @@
 - name: Allow port 80 (HTTP)
   command: ufw allow 80
 
+- name: Allow out port 80 (HTTP)
+  command: ufw allow out 80/tcp
+
 - name: Allow port 443 (HTTPS)
   command: ufw allow 443
+
+- name: Allow out port 443 (HTTPS)
+  command: ufw allow out 443/tcp
 
 - name: Allow port 53 (DNS)
   command: ufw allow 53
 
+- name: Allow out port 53 (DNS)
+  command: ufw allow out 53/udp
+
 - name: Allow port 123 (NTP)
   command: ufw allow 123
+
+- name: Alloe out port 123 (NTP)
+  command: ufw allow out 123/udp
 
 - name: Allow port 25 (SMTP)
   command: ufw allow 25
