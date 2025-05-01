@@ -1,0 +1,20 @@
+- name: Allow incoming SSH connections
+  command: ufw allow ssh
+
+- name: Set default UFW policy to deny incoming traffic
+  command: ufw default deny incoming
+
+- name: Set default UFW policy to deny outgoing traffic
+  command: ufw default deny outgoing
+
+- name: Allow incoming loopback traffic
+  command: ufw allow in on lo
+
+- name: Allow outgoing loopback traffic
+  command: ufw allow out on lo
+
+- name: Deny incoming netword interface traffic
+  command: ufw deny in from 127.0.0.0/8
+
+- name: Deny in
+  command: ufw deny in from ::1
