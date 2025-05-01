@@ -2,15 +2,31 @@
   ufw:
     state: enabled
 
-- name: Allowed Ports
+- name: Allow port 22 (SSH)
   command: ufw allow 22
+
+- name: Allow port 80 (HTTP)
   command: ufw allow 80
+
+- name: Allow port 443 (HTTPS)
   command: ufw allow 443
+
+- name: Allow port 53 (DNS)
   command: ufw allow 53
+
+- name: Allow port 123 (NTP)
   command: ufw allow 123
+
+- name: Allow port 25 (SMTP)
   command: ufw allow 25
+
+- name: Allow port 587 (SMTP Submission)
   command: ufw allow 587
+
+- name: Allow port 3306 (MySQL)
   command: ufw allow 3306
+
+- name: Allow port 5432 (PostgreSQL)
   command: ufw allow 5432
 
 - name: Set default UFW policy to deny incoming traffic
@@ -25,8 +41,8 @@
 - name: Allow outgoing loopback traffic
   command: ufw allow out on lo
 
-- name: Deny incoming network interface traffic
+- name: Deny incoming traffic from 127.0.0.0/8
   command: ufw deny in from 127.0.0.0/8
 
-- name: Deny incoming IPv6 traffic
+- name: Deny incoming traffic from ::1
   command: ufw deny in from ::1
