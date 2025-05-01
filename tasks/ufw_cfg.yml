@@ -14,7 +14,7 @@
   command: ufw allow 3306
   command: ufw allow 5432
   command: ufw allow icmp
-  
+
 - name: Set default UFW policy to deny incoming traffic
   command: ufw default deny incoming
 
@@ -23,7 +23,7 @@
 
 - name: Allow incoming loopback traffic
   command: ufw allow in on lo
-  
+
 - name: Allow outgoing loopback traffic
   command: ufw allow out on lo
 
