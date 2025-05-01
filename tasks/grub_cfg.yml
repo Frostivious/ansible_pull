@@ -1,9 +1,23 @@
 - name: Setting Grub cfg to readonly
   file:
-    path: /boot/grub2/grub.cfg
+    path: /boot/grub/grub.cfg
     mode: "0444"
 
-- name: setting grub to readonly
-  file:
-    path: /boot/default/grub
-    mode: "0444"
+- name: Ensure AppArmor kernel parameters are set in GRUB
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX='
+    line: 'GRUB_CMDLINE_LINUX="apparmor=1 security=apparmor"'
+    backrefs: yes
+    backup: yes
+  register: apparmor_grub_cfg
+
+- name: Regenerate GRUB config if AppArmor setting changed
+  command: update-grub
+  when: apparmor_grub_cfg.changed
+  register: grub_update
+
+- name: Prompt for reboot due to AppArmor activation
+  debug:
+    msg: "AppArmor settings applied. A reboot is required to activate changes."
+  when: grub_update.changed
