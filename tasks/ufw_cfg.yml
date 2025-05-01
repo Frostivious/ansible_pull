@@ -1,7 +1,6 @@
 - name: Enable ufw
   ufw:
     state: enabled
-  changed_when: "'enabled' not in ufw.status"
 
 - name: Allowed Ports
   command: ufw allow 22
