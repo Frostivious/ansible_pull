@@ -1,3 +1,6 @@
+- name: Enable UFW
+  command: ufw enable
+
 - name: Allow incoming SSH connections
   command: ufw allow ssh
 
