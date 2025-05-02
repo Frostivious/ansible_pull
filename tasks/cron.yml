@@ -4,3 +4,62 @@
     name: "ansible provision"
     minute: "*/10"
     job: "/usr/bin/ansible-pull -o -U https://github.com/Frostivious/ansible_pull.git /dev/null"
+
+- name: Ensure cron directories and files are owned by root
+  file:
+    path: "{{ item }}"
+    owner: root
+    group: root
+    recurse: yes
+  loop:
+    - /etc/cron.d
+    - /etc/cron.daily
+    - /etc/cron.hourly
+    - /etc/cron.monthly
+    - /etc/cron.yearly
+    - /etc/crontab
+
+- name: Set restrictive permissions
+  file:
+    path: "{{ item }}"
+    mode: "0750"
+    recurse: yes
+  loop:
+    - /etc/cron.d
+    - /etc/cron.daily
+    - /etc/cron.hourly
+    - /etc/cron.monthly
+    - /etc/cron.yearly
+- name: Set restrictive permissions on crontab file
+  file:
+    path: /etc/crontab
+    mode: "0640"
+
+- name: Set ACLs to allow ansible and serelna access
+  acl:
+    path: "{{ item }}"
+    entity: "{{ acl_user }}"
+    etype: user
+    permissions: rx
+    state: present
+    recursive: yes
+  loop:
+    - /etc/cron.d
+    - /etc/cron.daily
+    - /etc/cron.hourly
+    - /etc/cron.monthly
+    - /etc/cron.yearly
+  loop_control:
+    loop_var: item
+  vars:
+    acl_users:
+      - ansible
+      - serelna
+  with_nested:
+    - "{{ acl_users }}"
+    -
+      - /etc/cron.d
+      - /etc/cron.daily
+      - /etc/cron.hourly
+      - /etc/cron.monthly
+      - /etc/cron.yearly
