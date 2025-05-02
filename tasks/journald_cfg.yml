@@ -5,7 +5,7 @@
     line: 'Compress=yes'
     state: present
     backup: yes
-  notify: restart journald
+  register: compress_conf
 
 - name: Ensure journald.conf contains Storage=persistent
   lineinfile:
@@ -14,10 +14,10 @@
     line: 'Storage=persistent'
     state: present
     backup: yes
-  notify: restart journald
+  register: storage_conf
 
-- name: restart journald
+- name: Restart systemd-journald if config changed
   ansible.builtin.systemd:
     name: systemd-journald
     state: restarted
-  listen: restart journald
+  when: compress_conf.changed or storage_conf.changed
