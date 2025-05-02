@@ -26,7 +26,7 @@
   shell: WAZUH_MANAGER="192.168.1.22"
   when: wazuh_installed.rc != 0
 
--name: Install Wazuh agent
+- name: Install Wazuh agent
   shell: apt-get install -y wazuh-agent
   when: wazuh_installed.rc !=0
 
