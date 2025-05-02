@@ -9,9 +9,9 @@
       changed_when: False
 
   tasks:
+    - include_tasks: tasks/packages.yml
     - include_tasks: tasks/users.yml
     - include_tasks: tasks/cron.yml
-    - include_tasks: tasks/packages.yml
     - include_tasks: tasks/part_perms.yml
     - include_tasks: tasks/wazuh_agent.yml
     - include_tasks: tasks/coretto_jdk.yml
