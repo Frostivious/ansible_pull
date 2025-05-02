@@ -37,26 +37,14 @@
 
 - name: Set ACLs to allow ansible and serelna access
   acl:
-    path: "{{ item }}"
-    entity: "{{ acl_user }}"
+    path: "{{ item[1] }}"
+    entity: "{{ item[0] }}"
     etype: user
     permissions: rx
     state: present
     recursive: yes
-  loop:
-    - /etc/cron.d
-    - /etc/cron.daily
-    - /etc/cron.hourly
-    - /etc/cron.monthly
-    - /etc/cron.yearly
-  loop_control:
-    loop_var: item
-  vars:
-    acl_users:
-      - ansible
-      - serelna
   with_nested:
-    - "{{ acl_users }}"
+    - [ 'ansible', 'serelna' ]
     -
       - /etc/cron.d
       - /etc/cron.daily
