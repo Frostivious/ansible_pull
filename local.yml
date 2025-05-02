@@ -17,3 +17,4 @@
     - include_tasks: tasks/coretto_jdk.yml
     - include_tasks: tasks/grub_cfg.yml
     - include_tasks: tasks/ufw_cfg.yml
+    - include_tasks: tasks/journald_cfg.yml

@@ -1,0 +1,23 @@
+- name: Ensure journald.conf contains Compress=yes
+  lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: '^#?Compress='
+    line: 'Compress=yes'
+    state: present
+    backup: yes
+  notify: restart journald
+
+- name: Ensure journald.conf contains Storage=persistent
+  lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: '^#?Storage='
+    line: 'Storage=persistent'
+    state: present
+    backup: yes
+  notify: restart journald
+
+- name: restart journald
+  ansible.builtin.systemd:
+    name: systemd-journald
+    state: restarted
+  listen: restart journald
