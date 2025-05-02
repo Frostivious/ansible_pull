@@ -47,6 +47,9 @@
 - name: Allow out port 9418 (Git)
   command: ufw allow out 9418/tcp
 
+- name: Allow SSH to (Git)
+  command: ufw allow out to 192.30.252.0/22 port 22
+
 - name: Set default UFW policy to deny incoming traffic
   command: ufw default deny incoming
 
