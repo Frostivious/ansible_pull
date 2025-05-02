@@ -5,7 +5,7 @@
     minute: "*/10"
     job: "/usr/bin/ansible-pull -o -U https://github.com/Frostivious/ansible_pull.git /dev/null"
 
-- name: Ensure cron directories and files are owned by root
+- name: Ensure cron directories are owned by root
   file:
     path: "{{ item }}"
     owner: root
@@ -17,9 +17,14 @@
     - /etc/cron.hourly
     - /etc/cron.monthly
     - /etc/cron.yearly
-    - /etc/crontab
 
-- name: Set restrictive permissions
+- name: Ensure /etc/crontab is owned by root
+  file:
+    path: /etc/crontab
+    owner: root
+    group: root
+
+- name: Set restrictive permissions on cron directories
   file:
     path: "{{ item }}"
     mode: "0750"
@@ -30,12 +35,13 @@
     - /etc/cron.hourly
     - /etc/cron.monthly
     - /etc/cron.yearly
-- name: Set restrictive permissions on crontab file
+
+- name: Set restrictive permissions on /etc/crontab
   file:
     path: /etc/crontab
     mode: "0640"
 
-- name: Set ACLs to allow ansible and serelna access
+- name: Set ACLs on cron directories for ansible and serelna
   acl:
     path: "{{ item[1] }}"
     entity: "{{ item[0] }}"
@@ -51,3 +57,14 @@
       - /etc/cron.hourly
       - /etc/cron.monthly
       - /etc/cron.yearly
+
+- name: Set ACLs on /etc/crontab for ansible and serelna
+  acl:
+    path: /etc/crontab
+    entity: "{{ item }}"
+    etype: user
+    permissions: r
+    state: present
+  loop:
+    - ansible
+    - serelna
