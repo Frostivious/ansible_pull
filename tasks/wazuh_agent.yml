@@ -22,10 +22,13 @@
     update_cache: yes
   when: wazuh_installed.rc != 0
 
-- name: Install Wazuh agent
-  ansible.builtin.shell: |
-    WAZUH_MANAGER="192.168.1.22" apt-get install -y wazuh-agent
+- name: Set Wazuh Server Address
+  shell: WAZUH_MANAGER="192.168.1.22"
   when: wazuh_installed.rc != 0
+
+-name: Install Wazuh agent
+  shell: apt-get install -y wazuh-agent
+  when: wazuh_installed.rc !=0
 
 - name: Enable Wazuh agent service
   ansible.builtin.systemd:
