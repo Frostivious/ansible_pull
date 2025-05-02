@@ -5,6 +5,14 @@
     minute: "*/10"
     job: "/usr/bin/ansible-pull -o -U https://github.com/Frostivious/ansible_pull.git /dev/null"
 
+- name: install cron job (nightly apt update/upgrade with conditional reboot)
+  cron:
+    user: ansible
+    name: "nightly apt upgrade"
+    minute: "30"
+    hour: "2"
+    job: "/usr/bin/apt update && /usr/bin/apt upgrade -y && [ -f /var/run/reboot-required ] && /sbin/reboot >> /var/log/apt-nightly.log 2>&1"
+
 - name: Ensure cron directories are owned by root
   file:
     path: "{{ item }}"
