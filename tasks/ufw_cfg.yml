@@ -41,6 +41,18 @@
 - name: Allow port 5432 (PostgreSQL)
   command: ufw allow 5432
 
+- name: Allow port 1515 (Wazuh)
+  command: ufw allow 1515
+
+- name: Allow out port 1515 (Wazuh)
+  command: ufw allow out 1515
+
+- name: Allow port 1514 (Wazuh)
+  command: ufw allow 1514
+
+- name: Allow out port 1514 (Wazuh)
+  command: ufw allow out 1514
+
 - name: Allow port 9418 (Git)
   command: ufw allow 9418
 
