@@ -26,7 +26,7 @@
 - name: Allow port 123 (NTP)
   command: ufw allow 123
 
-- name: Alloe out port 123 (NTP)
+- name: Allow out port 123 (NTP)
   command: ufw allow out 123/udp
 
 - name: Allow port 25 (SMTP)
@@ -40,6 +40,12 @@
 
 - name: Allow port 5432 (PostgreSQL)
   command: ufw allow 5432
+
+- name: Allow port 9418 (Git)
+  command: ufw allow 9418
+
+- name: Allow out port 9418 (Git)
+  command: ufw allow out 9418/tcp
 
 - name: Set default UFW policy to deny incoming traffic
   command: ufw default deny incoming
