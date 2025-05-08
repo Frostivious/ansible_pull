@@ -15,8 +15,6 @@
     state=mounted
     fstype=ext4
     opts="nodev,nosuid,noexec"
-  when: item.mount == "/tmp"
-  with_items: ansible_mounts
 
 - name: Sets nodev, no suid, for /var
   mount: >
@@ -25,8 +23,6 @@
     state=mounted
     fstype=ext4
     opts="nodev,nosuid,noexec"
-  when: item.mount == "/var"
-  with_items: ansible_mounts
 
 - name: Sets nodev, no suid, noexec for /var/tmp
   mount: >
@@ -35,8 +31,6 @@
     state=mounted
     fstype=ext4
     opts="nodev,nosuid,noexec"
-  when: item.mount == "/var/tmp"
-  with_items: ansible_mounts
 
 - name: Sets nodev, no suid, noexec for /var/log
   mount: >
@@ -45,8 +39,6 @@
     state=mounted
     fstype=ext4
     opts="nodev,nosuid,noexec"
-  when: item.mount == "/var/log"
-  with_items: ansible_mounts
 
 - name: Sets nodev, no suid, noexec for /var/log/audit
   mount: >
@@ -55,8 +47,6 @@
     state=mounted
     fstype=ext4
     opts="nodev,nosuid,noexec"
-  when: item.mount == "/var/log/audit"
-  with_items: ansible_mounts
 
 - name: Sets nodev, no suid, for /home
   mount: >
@@ -65,5 +55,3 @@
     state=mounted
     fstype=ext4
     opts="nodev,nosuid,noexec"
-  when: item.mount == "/home"
-  with_items: ansible_mounts
