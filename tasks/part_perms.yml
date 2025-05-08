@@ -6,3 +6,48 @@
     fstype= {{ item.fstype }}
     opts="nodev,nosuid,noexec"
   when: item.mount == "/tmp"
+
+- name: Sets nodev, no suid, for /var
+  mount: >
+    name="/var"
+    src={{ item.device }}
+    state=mounted
+    fstype= {{ item.fstype }}
+    opts="nodev,nosuid,noexec"
+  when: item.mount == "/var"
+
+- name: Sets nodev, no suid, noexec for /var/tmp
+  mount: >
+    name="/var/tmp"
+    src={{ item.device }}
+    state=mounted
+    fstype= {{ item.fstype }}
+    opts="nodev,nosuid,noexec"
+  when: item.mount == "/var/tmp"
+
+- name: Sets nodev, no suid, noexec for /var/log
+  mount: >
+    name="/var/log"
+    src={{ item.device }}
+    state=mounted
+    fstype= {{ item.fstype }}
+    opts="nodev,nosuid,noexec"
+  when: item.mount == "/var/log"
+
+- name: Sets nodev, no suid, noexec for /var/log/audit
+  mount: >
+    name="/var/log/audit"
+    src={{ item.device }}
+    state=mounted
+    fstype= {{ item.fstype }}
+    opts="nodev,nosuid,noexec"
+  when: item.mount == "/var/log/audit"
+
+- name: Sets nodev, no suid, for /home
+  mount: >
+    name="/home"
+    src={{ item.device }}
+    state=mounted
+    fstype= {{ item.fstype }}
+    opts="nodev,nosuid,noexec"
+  when: item.mount == "/home"
