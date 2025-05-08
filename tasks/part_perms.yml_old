@@ -1,0 +1,87 @@
+- name: Get the current mount points
+  set_fact:
+    mount_points:
+      tmp_mount: "{{ ansible_mounts | selectattr('mount', 'equalto', '/tmp') | map(attribute='device') | first }}"
+      var_mount: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var') | map(attribute='device') | first }}"
+      var_tmp_mount: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/tmp') | map(attribute='device') | first }}"
+      var_log_mount: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/log') | map(attribute='device') | first }}"
+      var_log_audit_mount: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/log/audit') | map(attribute='device') | first }}"
+      home_mount: "{{ ansible_mounts | selectattr('mount', 'equalto', '/home') | map(attribute='device') | first }}"
+
+- name: Ensure /tmp is mounted with noexec, nodev, and nosuid
+  lineinfile:
+    path: /etc/fstab
+    regexp: "^{{ mount_points.tmp_mount | quote }}\\s+/tmp\\s+"
+    line: "{{ mount_points.tmp_mount }} /tmp ext4 defaults,noexec,nodev,nosuid 0 2"
+    backup: yes
+  register: tmp_fstab_change
+
+- name: Remount /tmp if required
+  command: mount -o remount,noexec,nodev,nosuid /tmp
+  when: tmp_fstab_change.changed
+  changed_when: false
+
+- name: Ensure /var is mounted with nodev and nosuid
+  lineinfile:
+    path: /etc/fstab
+    regexp: "^{{ mount_points.var_mount | quote }}\\s+/var\\s+"
+    line: "{{ mount_points.var_mount }} /var ext4 defaults,nodev,nosuid 0 2"
+    backup: yes
+  register: var_fstab_change
+
+- name: Remount /var if required
+  command: mount -o remount,nodev,nosuid /var
+  when: var_fstab_change.changed
+  changed_when: false
+
+- name: Ensure /var/tmp is mounted with noexec, nodev, and nosuid
+  lineinfile:
+    path: /etc/fstab
+    regexp: "^{{ mount_points.var_tmp_mount | quote }}\\s+/var/tmp\\s+"
+    line: "{{ mount_points.var_tmp_mount }} /var/tmp ext4 defaults,noexec,nodev,nosuid 0 2"
+    backup: yes
+  register: var_tmp_fstab_change
+
+- name: Remount /var/tmp if required
+  command: mount -o remount,noexec,nodev,nosuid /var/tmp
+  when: var_tmp_fstab_change.changed
+  changed_when: false
+
+- name: Ensure /var/log is mounted with noexec, nodev, and nosuid
+  lineinfile:
+    path: /etc/fstab
+    regexp: "^{{ mount_points.var_log_mount | quote }}\\s+/var/log\\s+"
+    line: "{{ mount_points.var_log_mount }} /var/log ext4 defaults,noexec,nodev,nosuid 0 2"
+    backup: yes
+  register: var_log_fstab_change
+
+- name: Remount /var/log if required
+  command: mount -o remount,noexec,nodev,nosuid /var/log
+  when: var_log_fstab_change.changed
+  changed_when: false
+
+- name: Ensure /var/log/audit is mounted with noexec, nodev, and nosuid
+  lineinfile:
+    path: /etc/fstab
+    regexp: "^{{ mount_points.var_log_audit_mount | quote }}\\s+/var/log/audit\\s+"
+    line: "{{ mount_points.var_log_audit_mount }} /var/log/audit ext4 defaults,noexec,nodev,nosuid 0 2"
+    backup: yes
+  register: var_log_audit_fstab_change
+
+- name: Remount /var/log/audit if required
+  command: mount -o remount,noexec,nodev,nosuid /var/log/audit
+  when: var_log_audit_fstab_change.changed
+  changed_when: false
+
+- name: Ensure /home is mounted with nodev and nosuid
+  lineinfile:
+    path: /etc/fstab
+    regexp: "^{{ mount_points.home_mount | quote }}\\s+/home\\s+"
+    line: "{{ mount_points.home_mount }} /home ext4 defaults,nodev,nosuid 0 2"
+    backup: yes
+  register: home_fstab_change
+
+- name: Remount /home if required
+  command: mount -o remount,nodev,nosuid /home
+  when: home_fstab_change.changed
+  changed_when: false
