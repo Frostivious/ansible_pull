@@ -1,9 +1,19 @@
+- name: Get Current Mount Points
+  set_fact"
+    mount_points:
+      tmp: "{{ ansible_mounts | selectattr('mount', 'equalto', '/tmp') | map(attribute='device') | first }}"
+      var: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var') | map(attribute='device') | first }}"
+      var_tmp: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/tmp') | map(attribute='device') | first }}"
+      var_log: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/log') | map(attribute='device') | first }}"
+      var_log_audit: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/log/audit') | map(attribute='device') | first }}"
+      home: "{{ ansible_mounts | selectattr('mount', 'equalto', '/home') | map(attribute='device') | first }}"
+
 - name: Sets nodev, no suid, noexec for /tmp
   mount: >
     name="/tmp"
-    src={{ item.device }}
+    src={{ mount_points.tmp }}
     state=mounted
-    fstype= {{ item.fstype }}
+    fstype=ext4
     opts="nodev,nosuid,noexec"
   when: item.mount == "/tmp"
   with_items: ansible_mounts
@@ -11,9 +21,9 @@
 - name: Sets nodev, no suid, for /var
   mount: >
     name="/var"
-    src={{ item.device }}
+    src={{ mount_points.var }}
     state=mounted
-    fstype= {{ item.fstype }}
+    fstype=ext4
     opts="nodev,nosuid,noexec"
   when: item.mount == "/var"
   with_items: ansible_mounts
@@ -21,9 +31,9 @@
 - name: Sets nodev, no suid, noexec for /var/tmp
   mount: >
     name="/var/tmp"
-    src={{ item.device }}
+    src={{ mount_points.var_tmp }}
     state=mounted
-    fstype= {{ item.fstype }}
+    fstype=ext4
     opts="nodev,nosuid,noexec"
   when: item.mount == "/var/tmp"
   with_items: ansible_mounts
@@ -31,9 +41,9 @@
 - name: Sets nodev, no suid, noexec for /var/log
   mount: >
     name="/var/log"
-    src={{ item.device }}
+    src={{ mount_points.var_log }}
     state=mounted
-    fstype= {{ item.fstype }}
+    fstype=ext4
     opts="nodev,nosuid,noexec"
   when: item.mount == "/var/log"
   with_items: ansible_mounts
@@ -41,9 +51,9 @@
 - name: Sets nodev, no suid, noexec for /var/log/audit
   mount: >
     name="/var/log/audit"
-    src={{ item.device }}
+    src={{ mount_points.var_log_audit }}
     state=mounted
-    fstype= {{ item.fstype }}
+    fstype=ext4
     opts="nodev,nosuid,noexec"
   when: item.mount == "/var/log/audit"
   with_items: ansible_mounts
@@ -51,9 +61,9 @@
 - name: Sets nodev, no suid, for /home
   mount: >
     name="/home"
-    src={{ item.device }}
+    src={{ mount_points.home }}
     state=mounted
-    fstype= {{ item.fstype }}
+    fstype=ext4
     opts="nodev,nosuid,noexec"
   when: item.mount == "/home"
   with_items: ansible_mounts
