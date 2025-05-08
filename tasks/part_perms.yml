@@ -1,5 +1,5 @@
 - name: Get Current Mount Points
-  set_fact"
+  set_fact:
     mount_points:
       tmp: "{{ ansible_mounts | selectattr('mount', 'equalto', '/tmp') | map(attribute='device') | first }}"
       var: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var') | map(attribute='device') | first }}"
