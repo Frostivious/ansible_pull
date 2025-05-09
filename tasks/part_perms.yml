@@ -22,7 +22,7 @@
     src={{ mount_points.var }}
     state=mounted
     fstype=ext4
-    opts="nodev,nosuid,noexec"
+    opts="nodev,nosuid"
 
 - name: Sets nodev, no suid, noexec for /var/tmp
   mount: >
