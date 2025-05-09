@@ -18,3 +18,10 @@
     - include_tasks: tasks/grub_cfg.yml
     - include_tasks: tasks/ufw_cfg.yml
     - include_tasks: tasks/journald_cfg.yml
+    - include_tasks: tasks/filesystems/disable_cramfs.yml
+    - include_tasks: tasks/filesystems/disable_hfs.yml
+    - include_tasks: tasks/filesystems/disable_squashfs.yml
+    - include_tasks: tasks/filesystems/disable_freevxfs.yml
+    - include_tasks: tasks/filesystems/disable_jffs2.yml
+    - include_tasks: tasks/filesystems/disable_hfsplus.yml
+    - include_tasks: tasks/filesystems/disable_overlayfs.yml
