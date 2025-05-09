@@ -8,6 +8,7 @@
       - auditd
       - audispd-plugins
       - acl
+      - apparmor-utils
 
 - name: Remove Packages
   apt:
@@ -17,9 +18,9 @@
       - telnetd
       - inetutils-telnet
       - telnetd-ssl
+      - nftables
 
     state: absent
-
 - name: Removed unused dependencies
   apt:
     autoremove: true

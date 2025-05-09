@@ -161,9 +161,14 @@
 - name: Allow SSH to (Git)
   command: ufw allow out to 20.26.156.214/32 port 22
 
-- name: Set default UFW policy to deny outgoing traffic
-  ufw:
-    default: deny
+- name: Default Deny Incoming
+  command: ufw default deny incoming
+
+- name: Default Deny Outgoing
+  command: ufw default deny outgoing
+
+- name: Default Deny Routed
+  command: ufw default deny routed
 
 - name: Allow incoming loopback traffic
   command: ufw allow in on lo

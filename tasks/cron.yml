@@ -13,66 +13,39 @@
     hour: "2"
     job: "/usr/bin/apt update && /usr/bin/apt upgrade -y && [ -f /var/run/reboot-required ] && /sbin/reboot >> /var/log/apt-nightly.log 2>&1"
 
-- name: Ensure cron directories are owned by root
-  file:
-    path: "{{ item }}"
-    owner: root
-    group: root
-    recurse: yes
-  loop:
-    - /etc/cron.d
-    - /etc/cron.daily
-    - /etc/cron.hourly
-    - /etc/cron.monthly
-    - /etc/cron.yearly
-
-- name: Ensure /etc/crontab is owned by root
-  file:
+- name: Ensure permissions on /etc/crontab are configured - CIS 5.1.2
+  ansible.builtin.file:
     path: /etc/crontab
     owner: root
     group: root
-
-- name: Set restrictive permissions on cron directories
-  file:
-    path: "{{ item }}"
-    mode: "0750"
-    recurse: yes
-  loop:
-    - /etc/cron.d
-    - /etc/cron.daily
-    - /etc/cron.hourly
-    - /etc/cron.monthly
-    - /etc/cron.yearly
-
-- name: Set restrictive permissions on /etc/crontab
-  file:
-    path: /etc/crontab
-    mode: "0640"
-
-- name: Set ACLs on cron directories for ansible and serelna
-  acl:
-    path: "{{ item[1] }}"
-    entity: "{{ item[0] }}"
-    etype: user
-    permissions: rx
-    state: present
-    recursive: yes
-  with_nested:
-    - [ 'ansible', 'serelna' ]
-    -
-      - /etc/cron.d
-      - /etc/cron.daily
-      - /etc/cron.hourly
-      - /etc/cron.monthly
-      - /etc/cron.yearly
-
-- name: Set ACLs on /etc/crontab for ansible and serelna
-  acl:
-    path: /etc/crontab
-    entity: "{{ item }}"
-    etype: user
-    permissions: r
-    state: present
-  loop:
-    - ansible
-    - serelna
+    mode: '0600'
+- name: Ensure permissions on /etc/cron.hourly are configured - CIS 5.1.3
+  ansible.builtin.file:
+    path: /etc/cron.hourly
+    owner: root
+    group: root
+    mode: '0600'
+- name: Ensure permissions on /etc/cron.daily are configured - CIS 5.1.4
+  ansible.builtin.file:
+    path: /etc/cron.daily
+    owner: root
+    group: root
+    mode: '0600'
+- name: Ensure permissions on /etc/cron.weekly are configured - CIS 5.1.5
+  ansible.builtin.file:
+    path: /etc/cron.weekly
+    owner: root
+    group: root
+    mode: '0600'
+- name: Ensure permissions on /etc/cron.monthly are configured - CIS 5.1.6
+  ansible.builtin.file:
+    path: /etc/cron.monthly
+    owner: root
+    group: root
+    mode: '0600'
+- name: Ensure permissions on /etc/cron.d are configured - CIS 5.1.7
+  ansible.builtin.file:
+    path: /etc/cron.d
+    owner: root
+    group: root
+    mode: '0600'
