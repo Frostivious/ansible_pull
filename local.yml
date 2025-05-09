@@ -12,12 +12,12 @@
     - include_tasks: tasks/packages.yml
     - include_tasks: tasks/users.yml
     - include_tasks: tasks/cron.yml
-    - include_tasks: tasks/part_perms.yml
     - include_tasks: tasks/wazuh_agent.yml
     - include_tasks: tasks/coretto_jdk.yml
     - include_tasks: tasks/grub_cfg.yml
     - include_tasks: tasks/ufw_cfg.yml
     - include_tasks: tasks/journald_cfg.yml
+    - include_tasks: tasks/part_perms.yml
     - include_tasks: tasks/filesystems/disable_cramfs.yml
     - include_tasks: tasks/filesystems/disable_hfs.yml
     - include_tasks: tasks/filesystems/disable_squashfs.yml
