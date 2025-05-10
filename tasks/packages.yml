@@ -19,6 +19,8 @@
       - inetutils-telnet
       - telnetd-ssl
       - nftables
+      - gdm3
+
 
     state: absent
 - name: Removed unused dependencies
