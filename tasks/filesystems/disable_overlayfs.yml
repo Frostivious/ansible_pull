@@ -51,3 +51,5 @@
   - medium_disruption
   - reboot_required
 
+- name: Ensure module is removed
+  shell: modprobe -r overlayfs 2>/dev/null; rmmod overlayfs 2>/dev/null

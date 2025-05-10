@@ -50,3 +50,6 @@
   - low_severity
   - medium_disruption
   - reboot_required
+
+- name: Ensure module is removed
+  shell: modprobe -r jffs2 2>/dev/null; rmmod jffs2 2>/dev/null
