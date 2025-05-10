@@ -50,3 +50,6 @@
   - low_severity
   - medium_disruption
   - reboot_required
+
+- name: Ensure module is removed
+  command: modprobe -r cramfs 2>/dev/null; rmmod cramfs 2>/dev/null
