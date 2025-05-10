@@ -1,0 +1,2 @@
+insmod /lib/modules/6.8.0-59-generic/kernel/drivers/mtd/mtd.ko.zst 
+insmod /lib/modules/6.8.0-59-generic/kernel/fs/cramfs/cramfs.ko.zst - /bin/false
