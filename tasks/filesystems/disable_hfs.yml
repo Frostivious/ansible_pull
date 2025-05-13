@@ -50,6 +50,3 @@
   - low_severity
   - medium_disruption
   - reboot_required
-
-- name: Ensure module is removed
-  shell: modprobe -r hfs 2>/dev/null; rmmod hfs 2>/dev/null
