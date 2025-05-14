@@ -1,0 +1,6 @@
+- name: Adds Cramfs to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^cramfs'
+    line: install cramfs /bin/false
+    state: present
