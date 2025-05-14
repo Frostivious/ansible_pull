@@ -4,3 +4,45 @@
     regexp: '^cramfs'
     line: install cramfs /bin/false
     state: present
+
+- name: Adds freevxfs to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^freevxfs'
+    line: install freevxfs /bin/false
+    state: present
+
+- name: Adds hfs to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^hfs'
+    line: install hfs /bin/false
+    state: present
+
+- name: Adds hfsplus to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^hfsplus'
+    line: install hfsplus /bin/false
+    state: present
+
+- name: Adds jffs2 to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^jffs2'
+    line: install jffs2 /bin/false
+    state: present
+
+- name: Adds overlayfs to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^overlayfs'
+    line: install overlayfs /bin/false
+    state: present
+
+- name: Adds squashfs to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^squashfs'
+    line: install squashfs /bin/false
+    state: present
