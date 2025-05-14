@@ -46,3 +46,45 @@
     regexp: '^squashfs'
     line: install squashfs /bin/false
     state: present
+
+- name: Adds udf to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^udf'
+    line: install udf /bin/false
+    state: present
+
+- name: Adds usb-storage to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^usb-storage'
+    line: install usb-storage /bin/false
+    state: present
+
+- name: Adds dccp to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^dccp'
+    line: install dccp /bin/false
+    state: present
+
+- name: Adds tipc to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^tipc'
+    line: install tipc /bin/false
+    state: present
+
+- name: Adds rds to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^rds'
+    line: install rds /bin/false
+    state: present
+
+- name: Adds sctp to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^sctp'
+    line: install sctp /bin/false
+    state: present
