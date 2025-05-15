@@ -9,6 +9,7 @@
       - audispd-plugins
       - acl
       - apparmor-utils
+      - nftables
 
 - name: Remove Packages
   apt:
@@ -18,7 +19,7 @@
       - telnetd
       - inetutils-telnet
       - telnetd-ssl
-      - nftables
+      - iptables
       - gdm3
 
 
