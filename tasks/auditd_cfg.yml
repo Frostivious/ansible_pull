@@ -1,0 +1,13 @@
+- name: Ensures audit logs are retained
+  lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^max_log_file_actions'
+    line: max_log_file_actions keep_logs
+    state: present
+
+- name:
+  lineinfile:
+    path: /etc/audit/rules.d/audit.rules
+    line: printf " -a always,exit -F arch=b64 -C euid!=uid -F auid!=unset -S execve -k user_emulation -a always,exit -F arch=b32 -C euid!=uid -F auid!=unset -S execve -k user_emulation " >> /etc/audit/rules.d/50-user_emulation.rules
+    state: present
+
