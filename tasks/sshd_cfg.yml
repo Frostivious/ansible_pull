@@ -15,22 +15,22 @@
 - name: Adjusts sshd ClientAliveInterval
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: '^clientaliveinterval'
-    line: clientaliveinterval 15
+    regexp: '^ClientAliveInterval'
+    line: ClientAliveInterval 15
     state: present
 
 - name: Adjusts sshd ClientAliveCountMax
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: '^clientalivecountmax'
-    line: clientalivemountmax 3
+    regexp: '^ClientAliveCountMax'
+    line: ClientAliveCountMax 3
     state: present
 
 - name: Disables sshd x11 Forwarding
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: '^disableforwarding'
-    line: disableforwarding yes
+    regexp: '^DisableForwarding'
+    line: DisableForwarding yes
     state: present
 
 - name: Adds a ssh login grace time
@@ -43,14 +43,14 @@
 - name: Adjusts max Authorization tries for ssh
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: '^maxauthtries'
-    line: maxauthtries 4
+    regexp: '^MaxAuthTries'
+    line: MaxAuthTries 4
     state: present
 
 - name: Disables root login over SSH making is so that escalation is required
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: '^permitrootlogin'
-    line: permitrootlogin no
+    regexp: '^PermitRootLogin'
+    line: PermitRootLogin no
     state: present
 
