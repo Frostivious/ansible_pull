@@ -40,14 +40,14 @@
     line: LoginGraceTime 45
     state: present
 
--name: Adjusts max Authorization tries for ssh
+- name: Adjusts max Authorization tries for ssh
   lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '^maxauthtries'
     line: maxauthtries 4
     state: present
 
--name: Disables root login over SSH making is so that escalation is required
+- name: Disables root login over SSH making is so that escalation is required
   lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '^permitrootlogin'
