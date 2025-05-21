@@ -1,0 +1,2 @@
+- name: Syncs nftables conf with github
+  fetch: 
