@@ -1,5 +1,5 @@
 - name: Syncs nftables conf with github
-    ansible.builtin.get_url:
+  ansible.builtin.get_url:
     url: https://github.com/Frostivious/ansible_pull/blob/main/files/nftbales.conf
     dest: /etc/nftables.conf
   register: nftmp
