@@ -20,4 +20,4 @@
   shell: chown root:root /etc/gshadow-
 
 - name: remove excess perms from gshadow-
-  shell: 0000 /etc/gshadow-
+  shell: chmod 0000 /etc/gshadow-
