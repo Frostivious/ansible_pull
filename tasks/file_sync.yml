@@ -1,2 +1,9 @@
 - name: Syncs nftables conf with github
-  fetch: 
+  fetch:
+    src: https://github.com/Frostivious/ansible_pull/blob/main/files/nftbales.conf
+    dest: /etc/nftables.conf
+  register: nftmp
+
+- name: Restart nftables
+  shell: systemctl restart nftables
+  when: nftmp.changed

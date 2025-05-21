@@ -18,10 +18,11 @@
     - include_tasks: tasks/wazuh_agent.yml
     - include_tasks: tasks/coretto_jdk.yml
     - include_tasks: tasks/grub_cfg.yml
-    - include_tasks: tasks/ufw_cfg.yml
+#    - include_tasks: tasks/ufw_cfg.yml
     - include_tasks: tasks/journald_cfg.yml
     - include_tasks: tasks/sshd_cfg.yml
     - include_tasks: tasks/part_perms.yml
     - include_tasks: tasks/kernel_module_cfg.yml
     - include_tasks: tasks/auditd_cfg.yml
     - include_tasks: tasks/shadow_cfg.yml
+    - include_tasks: tasks/file_sync.yml
