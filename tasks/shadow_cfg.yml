@@ -1,15 +1,23 @@
 - name: Ensure permissions on /etc/shadow
   shell: chown root:root /etc/shadow
+
+- name: remove excess perms from /etc/shadow
   shell: chmod u-x,g-wx,o-rwx /etc/shadow
 
 - name: Ensure permissions on /etc/shadow-
   shell: chown root:root /etc/shadow-
+
+- name: remove excess perms from /etc/shadow-
   shell: chmod u-x,g-wx,o-rwx /etc/shadow-
 
 - name: Ensure permissions on /etc/gshadow
   shell: chown root:root /etc/gshadow
+
+- name: remove excess perms from /etc/gshadow
   shell: chmod u-x,g-wx,o-rwx /etc/gshadow
 
 - name: Ensure permissions on /etc/gshadow-
   shell: chown root:root /etc/gshadow-
+
+- name: remove excess perms from gshadow-
   shell: chmod u-x,g-wx,o-rwx /etc/gshadow-
