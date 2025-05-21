@@ -1,27 +1,15 @@
 - name: Ensure permissions on /etc/shadow
-  file:
-    path: /etc/shadow
-    owner: root
-    group: root
-    mode: '0640'
+  shell: chown root:root /etc/shadow
+  shell: chmod u-x,g-wx,o-rwx /etc/shadow
 
 - name: Ensure permissions on /etc/shadow-
-  file:
-    path: /etc/shadow-
-    owner: root
-    group: root
-    mode: '0640'
+  shell: chown root:root /etc/shadow-
+  shell: chmod u-x,g-wx,o-rwx /etc/shadow-
 
 - name: Ensure permissions on /etc/gshadow
-  file:
-    path: /etc/gshadow
-    owner: root
-    group: root
-    mode: '0640'
+  shell: chown root:root /etc/gshadow
+  shell: chmod u-x,g-wx,o-rwx /etc/gshadow
 
 - name: Ensure permissions on /etc/gshadow-
-  file:
-    path: /etc/gshadow-
-    owner: root
-    group: root
-    mode: '0640'
+  shell: chown root:root /etc/gshadow-
+  shell: chmod u-x,g-wx,o-rwx /etc/gshadow-
