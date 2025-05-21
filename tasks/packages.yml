@@ -9,6 +9,7 @@
       - audispd-plugins
       - acl
       - apparmor-utils
+      - nftables
 
 - name: Remove Packages
   apt:
