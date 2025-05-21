@@ -24,3 +24,4 @@
     - include_tasks: tasks/part_perms.yml
     - include_tasks: tasks/kernel_module_cfg.yml
     - include_tasks: tasks/auditd_cfg.yml
+    - include_tasks: tasks/shadow_cfg.yml

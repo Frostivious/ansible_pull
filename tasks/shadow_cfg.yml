@@ -1,0 +1,27 @@
+- name: Ensure permissions on /etc/shadow
+  file:
+    path: /etc/shadow
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Ensure permissions on /etc/shadow-
+  file:
+    path: /etc/shadow-
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Ensure permissions on /etc/gshadow
+  file:
+    path: /etc/gshadow
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Ensure permissions on /etc/gshadow-
+  file:
+    path: /etc/gshadow-
+    owner: root
+    group: root
+    mode: '0600'
