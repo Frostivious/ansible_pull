@@ -4,6 +4,6 @@
 #    dest: /etc/nftables.conf
 #  register: nftmp
 
-- name: Restart nftables
-  shell: systemctl restart nftables
-  when: nftmp.changed
+#- name: Restart nftables
+#  shell: systemctl restart nftables
+#  when: nftmp.changed
