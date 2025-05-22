@@ -10,7 +10,7 @@
       - acl
       - apparmor-utils
       - iptables-persistent
-
+      - ufw
 - name: Remove Packages
   apt:
     name:
