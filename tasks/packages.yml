@@ -9,7 +9,9 @@
       - audispd-plugins
       - acl
       - apparmor-utils
-      - nftables
+      - ufw
+      - iptables
+      - iptables-persistent
 
 - name: Remove Packages
   apt:
@@ -20,9 +22,7 @@
       - inetutils-telnet
       - telnetd-ssl
       - gdm3
-      - iptables
-      - ufw
-      - iptables-persistent
+      - nftables
 
     state: absent
 - name: Removed unused dependencies
