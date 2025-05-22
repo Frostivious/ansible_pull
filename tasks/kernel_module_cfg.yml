@@ -88,3 +88,87 @@
     regexp: '^sctp'
     line: install sctp /bin/false
     state: present
+
+- name: Adds afs to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^afs'
+    line: install afs /bin/false
+    state: present
+
+ name: Adds ceph to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^ceph'
+    line: install ceph /bin/false
+    state: present
+
+ name: Adds cifs to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^cifs'
+    line: install cifs /bin/false
+    state: present
+
+ name: Adds exfat to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^exfat'
+    line: install exfat /bin/false
+    state: present
+
+ name: Adds ext to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^ext'
+    line: install ext /bin/false
+    state: present
+
+ name: Adds fat to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^fat'
+    line: install fat /bin/false
+    state: present
+
+ name: Adds fscache to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^fscache'
+    line: install fscache /bin/false
+    state: present
+
+ name: Adds fuse to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^fuse'
+    line: install fuse /bin/false
+    state: present
+
+ name: Adds gfs2 to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^gfs2'
+    line: install gfs2 /bin/false
+    state: present
+
+ name: Adds nfs_common to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^nfs_common'
+    line: install nfs_common /bin/false
+    state: present
+
+ name: Adds nfsd to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^nfsd'
+    line: install nfsd /bin/false
+    state: present
+
+ name: Adds smbfs_common to Blacklist
+  lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    regexp: '^smbfs_common'
+    line: install smbfs_common /bin/false
+    state: present

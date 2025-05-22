@@ -10,6 +10,8 @@
       - acl
       - apparmor-utils
       - ufw
+      - libpam-pwquality
+      - systemd-journal-remote
 
 - name: Remove Packages
   apt:
@@ -21,8 +23,11 @@
       - telnetd-ssl
       - gdm3
       - nftables
+      - rsync
+      - gdm3
 
     state: absent
+
 - name: Removed unused dependencies
   apt:
     autoremove: true
