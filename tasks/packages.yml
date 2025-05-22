@@ -9,8 +9,6 @@
       - audispd-plugins
       - acl
       - apparmor-utils
-      - ufw
-      - iptables
       - iptables-persistent
 
 - name: Remove Packages
