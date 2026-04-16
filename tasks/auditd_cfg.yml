@@ -185,8 +185,8 @@
       -w /var/log/lastlog -p wa -k logins
       -w /var/run/faillock -p wa -k logins
 
-# 35744 - Ensure chcon command attempts are collected
-- name: Ensure chcon command attempts are collected
+# 35744, 35745, 35746 - chcon, setfacl, chacl command attempts
+- name: Ensure chcon, setfacl and chacl command attempts are collected
   ansible.builtin.copy:
     dest: /etc/audit/rules.d/50-perm_chng.rules
     owner: root
@@ -194,23 +194,8 @@
     mode: '0640'
     content: |
       -a always,exit -F path=/usr/bin/chcon -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
-
-# 35745 - Ensure setfacl command attempts are collected
-- name: Ensure setfacl command attempts are collected
-  ansible.builtin.copy:
-    dest: /etc/audit/rules.d/50-perm_chng.rules
-    owner: root
-    group: root
-    mode: '0640'
-    content: |
       -a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
       -a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
-
-# 35746 - chacl is now combined into 50-perm_chng.rules above
-- name: Remove old separate chacl rules file
-  ansible.builtin.file:
-    path: /etc/audit/rules.d/50-perm_chacl.rules
-    state: absent
 
 # 35747 - Ensure usermod command attempts are collected
 - name: Ensure usermod command attempts are collected
@@ -234,9 +219,10 @@
       -a always,exit -F arch=b32 -S init_module,finit_module,delete_module,create_module,query_module -F auid>=1000 -F auid!=unset -k kernel_modules
       -a always,exit -F path=/usr/bin/kmod -F perm=x -F auid>=1000 -F auid!=unset -k kernel_modules
 
-- name: Remove old separate perm_acl rules file
+# Clean up old/replaced rule files
+- name: Remove old separate chacl rules file
   ansible.builtin.file:
-    path: /etc/audit/rules.d/50-perm_acl.rules
+    path: /etc/audit/rules.d/50-perm_chacl.rules
     state: absent
 
 - name: Remove old separate perm_acl rules file
@@ -251,6 +237,7 @@
 
 # 35749 - Ensure the audit configuration is immutable
 # IMPORTANT: This must be the last rule file loaded - prefix 99 ensures it loads last
+# NOTE: Once -e 2 is active a reboot is required to load any new rules
 - name: Ensure audit configuration is immutable
   ansible.builtin.copy:
     dest: /etc/audit/rules.d/99-finalize.rules
@@ -270,3 +257,5 @@
     - augenrules_result.rc != 0
     - "'Rule exists' not in augenrules_result.stderr"
     - "'No change' not in augenrules_result.stdout"
+    - "augenrules_result.stdout != ''"
+    - "augenrules_result.stderr != ''"
