@@ -2,8 +2,8 @@
 - name: Ensures audit logs are retained
   ansible.builtin.lineinfile:
     path: /etc/audit/auditd.conf
-    regexp: '^max_log_file_actions'
-    line: max_log_file_actions keep_logs
+    regexp: '^max_log_file_action\s*='
+    line: max_log_file_action = KEEP_LOGS
     state: present
 
 # 35738 - Discretionary access control permission modification events
