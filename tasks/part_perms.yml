@@ -1,66 +1,73 @@
 - name: Get Current Mount Points
-  set_fact:
+  ansible.builtin.set_fact:
     mount_points:
-      tmp: "{{ ansible_mounts | selectattr('mount', 'equalto', '/tmp') | map(attribute='device') | first }}"
-      var: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var') | map(attribute='device') | first }}"
-      var_tmp: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/tmp') | map(attribute='device') | first }}"
-      var_log: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/log') | map(attribute='device') | first }}"
-      var_log_audit: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/log/audit') | map(attribute='device') | first }}"
-      home: "{{ ansible_mounts | selectattr('mount', 'equalto', '/home') | map(attribute='device') | first }}"
-      dev_shm: "{{ ansible_mounts | selectattr('mount', 'equalto', '/dev/shm') | map(attribute='device') | first }}"
+      tmp: "{{ ansible_mounts | selectattr('mount', 'equalto', '/tmp') | map(attribute='device') | first | default('') }}"
+      var: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var') | map(attribute='device') | first | default('') }}"
+      var_tmp: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/tmp') | map(attribute='device') | first | default('') }}"
+      var_log: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/log') | map(attribute='device') | first | default('') }}"
+      var_log_audit: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/log/audit') | map(attribute='device') | first | default('') }}"
+      home: "{{ ansible_mounts | selectattr('mount', 'equalto', '/home') | map(attribute='device') | first | default('') }}"
+      dev_shm: "{{ ansible_mounts | selectattr('mount', 'equalto', '/dev/shm') | map(attribute='device') | first | default('') }}"
 
-- name: Sets nodev, no suid, noexec for /tmp
-  mount: >
-    name="/tmp"
-    src={{ mount_points.tmp }}
-    state=mounted
-    fstype=ext4
-    opts="nodev,nosuid,noexec"
+- name: Sets nodev, nosuid, noexec for /tmp
+  ansible.builtin.mount:
+    name: /tmp
+    src: "{{ mount_points.tmp }}"
+    state: mounted
+    fstype: ext4
+    opts: nodev,nosuid,noexec
+  when: mount_points.tmp != ''
 
-- name: Sets nodev, no suid, for /var
-  mount: >
-    name="/var"
-    src={{ mount_points.var }}
-    state=mounted
-    fstype=ext4
-    opts="nodev,nosuid"
+- name: Sets nodev, nosuid for /var
+  ansible.builtin.mount:
+    name: /var
+    src: "{{ mount_points.var }}"
+    state: mounted
+    fstype: ext4
+    opts: nodev,nosuid
+  when: mount_points.var != ''
 
-- name: Sets nodev, no suid, noexec for /var/tmp
-  mount: >
-    name="/var/tmp"
-    src={{ mount_points.var_tmp }}
-    state=mounted
-    fstype=ext4
-    opts="nodev,nosuid,noexec"
+- name: Sets nodev, nosuid, noexec for /var/tmp
+  ansible.builtin.mount:
+    name: /var/tmp
+    src: "{{ mount_points.var_tmp }}"
+    state: mounted
+    fstype: ext4
+    opts: nodev,nosuid,noexec
+  when: mount_points.var_tmp != ''
 
-- name: Sets nodev, no suid, noexec for /var/log
-  mount: >
-    name="/var/log"
-    src={{ mount_points.var_log }}
-    state=mounted
-    fstype=ext4
-    opts="nodev,nosuid,noexec"
+- name: Sets nodev, nosuid, noexec for /var/log
+  ansible.builtin.mount:
+    name: /var/log
+    src: "{{ mount_points.var_log }}"
+    state: mounted
+    fstype: ext4
+    opts: nodev,nosuid,noexec
+  when: mount_points.var_log != ''
 
-- name: Sets nodev, no suid, noexec for /var/log/audit
-  mount: >
-    name="/var/log/audit"
-    src={{ mount_points.var_log_audit }}
-    state=mounted
-    fstype=ext4
-    opts="nodev,nosuid,noexec"
+- name: Sets nodev, nosuid, noexec for /var/log/audit
+  ansible.builtin.mount:
+    name: /var/log/audit
+    src: "{{ mount_points.var_log_audit }}"
+    state: mounted
+    fstype: ext4
+    opts: nodev,nosuid,noexec
+  when: mount_points.var_log_audit != ''
 
-- name: Sets nodev, no suid, for /home
-  mount: >
-    name="/home"
-    src={{ mount_points.home }}
-    state=mounted
-    fstype=ext4
-    opts="nodev,nosuid,noexec"
+- name: Sets nodev, nosuid, noexec for /home
+  ansible.builtin.mount:
+    name: /home
+    src: "{{ mount_points.home }}"
+    state: mounted
+    fstype: ext4
+    opts: nodev,nosuid,noexec
+  when: mount_points.home != ''
 
-- name: Sets nodev, no suid, for /dev/shm
-  mount: >
-    name="/dev/shm"
-    src={{ mount_points.dev_shm }}
-    state=mounted
-    fstype=tmpfs
-    opts="nodev,nosuid,noexec"
+- name: Sets nodev, nosuid, noexec for /dev/shm
+  ansible.builtin.mount:
+    name: /dev/shm
+    src: "{{ mount_points.dev_shm }}"
+    state: mounted
+    fstype: tmpfs
+    opts: nodev,nosuid,noexec
+  when: mount_points.dev_shm != ''
