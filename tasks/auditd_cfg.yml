@@ -21,7 +21,7 @@
       -a always,exit -F arch=b64 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid>=1000 -F auid!=unset -k perm_mod
       -a always,exit -F arch=b32 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid>=1000 -F auid!=unset -k perm_mod
 
-# 35734 - Events that modify date and time information
+# 35734 - Ensure events that modify date and time information are collected
 - name: Ensure date and time modification events are collected
   ansible.builtin.copy:
     dest: /etc/audit/rules.d/50-time-change.rules
@@ -29,8 +29,10 @@
     group: root
     mode: '0640'
     content: |
-      -a always,exit -F arch=b64 -S adjtimex,settimeofday,clock_settime -k time-change
-      -a always,exit -F arch=b32 -S adjtimex,settimeofday,stime,clock_settime -k time-change
+      -a always,exit -F arch=b64 -S adjtimex,settimeofday -k time-change
+      -a always,exit -F arch=b32 -S adjtimex,settimeofday -k time-change
+      -a always,exit -F arch=b64 -S clock_settime -F a0=0x0 -k time-change
+      -a always,exit -F arch=b32 -S clock_settime -F a0=0x0 -k time-change
       -w /etc/localtime -p wa -k time-change
 
 # 35733 - Events that modify the sudo log file
@@ -54,7 +56,7 @@
       -w /etc/apparmor/ -p wa -k MAC-policy
       -w /etc/apparmor.d/ -p wa -k MAC-policy
 
-# 35735 - Events that modify the system's network environment
+# 35735 - Ensure events that modify the system's network environment are collected
 - name: Ensure network environment modification events are collected
   ansible.builtin.copy:
     dest: /etc/audit/rules.d/50-system-locale.rules
@@ -69,8 +71,9 @@
       -w /etc/hosts -p wa -k system-locale
       -w /etc/networks -p wa -k system-locale
       -w /etc/network/ -p wa -k system-locale
+      -w /etc/netplan/ -p wa -k system-locale
 
-# 35737 - Events that modify user/group information
+# 35737 - Ensure events that modify user/group information are collected
 - name: Ensure user and group modification events are collected
   ansible.builtin.copy:
     dest: /etc/audit/rules.d/50-identity.rules
@@ -83,6 +86,9 @@
       -w /etc/gshadow -p wa -k identity
       -w /etc/shadow -p wa -k identity
       -w /etc/security/opasswd -p wa -k identity
+      -w /etc/nsswitch.conf -p wa -k identity
+      -w /etc/pam.conf -p wa -k identity
+      -w /etc/pam.d -p wa -k identity
 
 # 35742 - File deletion events by users
 - name: Ensure file deletion events by users are collected
@@ -192,22 +198,19 @@
 # 35745 - Ensure setfacl command attempts are collected
 - name: Ensure setfacl command attempts are collected
   ansible.builtin.copy:
-    dest: /etc/audit/rules.d/50-perm_acl.rules
+    dest: /etc/audit/rules.d/50-perm_chng.rules
     owner: root
     group: root
     mode: '0640'
     content: |
-      -a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_acl
+      -a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
+      -a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
 
-# 35746 - Ensure chacl command attempts are collected
-- name: Ensure chacl command attempts are collected
-  ansible.builtin.copy:
-    dest: /etc/audit/rules.d/50-perm_chacl.rules
-    owner: root
-    group: root
-    mode: '0640'
-    content: |
-      -a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_chacl
+# 35746 - chacl is now combined into 50-perm_chng.rules above
+- name: Remove old separate chacl rules file
+  ansible.builtin.file:
+    path: /etc/audit/rules.d/50-perm_chacl.rules
+    state: absent
 
 # 35747 - Ensure usermod command attempts are collected
 - name: Ensure usermod command attempts are collected
@@ -222,16 +225,29 @@
 # 35748 - Ensure kernel module loading, unloading and modification is collected
 - name: Ensure kernel module modification events are collected
   ansible.builtin.copy:
-    dest: /etc/audit/rules.d/50-modules.rules
+    dest: /etc/audit/rules.d/50-kernel_modules.rules
     owner: root
     group: root
     mode: '0640'
     content: |
-      -a always,exit -F arch=b64 -S init_module,finit_module,delete_module,create_module,query_module -F auid!=unset -k kernel_modules
-      -a always,exit -F arch=b32 -S init_module,finit_module,delete_module,create_module,query_module -F auid!=unset -k kernel_modules
-      -w /sbin/insmod -p x -k kernel_modules
-      -w /sbin/rmmod -p x -k kernel_modules
-      -w /sbin/modprobe -p x -k kernel_modules
+      -a always,exit -F arch=b64 -S init_module,finit_module,delete_module,create_module,query_module -F auid>=1000 -F auid!=unset -k kernel_modules
+      -a always,exit -F arch=b32 -S init_module,finit_module,delete_module,create_module,query_module -F auid>=1000 -F auid!=unset -k kernel_modules
+      -a always,exit -F path=/usr/bin/kmod -F perm=x -F auid>=1000 -F auid!=unset -k kernel_modules
+
+- name: Remove old separate perm_acl rules file
+  ansible.builtin.file:
+    path: /etc/audit/rules.d/50-perm_acl.rules
+    state: absent
+
+- name: Remove old separate perm_acl rules file
+  ansible.builtin.file:
+    path: /etc/audit/rules.d/50-perm_acl.rules
+    state: absent
+
+- name: Remove old modules rules file
+  ansible.builtin.file:
+    path: /etc/audit/rules.d/50-modules.rules
+    state: absent
 
 # 35749 - Ensure the audit configuration is immutable
 # IMPORTANT: This must be the last rule file loaded - prefix 99 ensures it loads last
