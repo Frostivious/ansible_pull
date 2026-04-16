@@ -1,3 +1,4 @@
+# /etc/audit/auditd.conf settings
 - name: Ensures audit logs are retained
   ansible.builtin.lineinfile:
     path: /etc/audit/auditd.conf
@@ -8,13 +9,11 @@
 # 35738 - Discretionary access control permission modification events
 - name: Ensure permission modification events are collected
   ansible.builtin.copy:
-    path: /etc/audit/rules.d/50-perm_mod.rules
-    create: true
+    dest: /etc/audit/rules.d/50-perm_mod.rules
     owner: root
     group: root
     mode: '0640'
-    marker: "# {mark} ANSIBLE MANAGED - perm_mod"
-    block: |
+    content: |
       -a always,exit -F arch=b64 -S chmod,fchmod,fchmodat -F auid>=1000 -F auid!=unset -k perm_mod
       -a always,exit -F arch=b32 -S chmod,fchmod,fchmodat -F auid>=1000 -F auid!=unset -k perm_mod
       -a always,exit -F arch=b64 -S chown,fchown,lchown,fchownat -F auid>=1000 -F auid!=unset -k perm_mod
@@ -25,13 +24,11 @@
 # 35734 - Events that modify date and time information
 - name: Ensure date and time modification events are collected
   ansible.builtin.copy:
-    path: /etc/audit/rules.d/50-time-change.rules
-    create: true
+    dest: /etc/audit/rules.d/50-time-change.rules
     owner: root
     group: root
     mode: '0640'
-    marker: "# {mark} ANSIBLE MANAGED - time-change"
-    block: |
+    content: |
       -a always,exit -F arch=b64 -S adjtimex,settimeofday,clock_settime -k time-change
       -a always,exit -F arch=b32 -S adjtimex,settimeofday,stime,clock_settime -k time-change
       -w /etc/localtime -p wa -k time-change
@@ -39,38 +36,32 @@
 # 35733 - Events that modify the sudo log file
 - name: Ensure sudo log file modification events are collected
   ansible.builtin.copy:
-    path: /etc/audit/rules.d/50-sudo.rules
-    create: true
+    dest: /etc/audit/rules.d/50-sudo.rules
     owner: root
     group: root
     mode: '0640'
-    marker: "# {mark} ANSIBLE MANAGED - sudo"
-    block: |
+    content: |
       -w /var/log/sudo.log -p wa -k sudo_log_file
 
 # 35743 - Events that modify Mandatory Access Controls
 - name: Ensure MAC modification events are collected
   ansible.builtin.copy:
-    path: /etc/audit/rules.d/50-MAC-policy.rules
-    create: true
+    dest: /etc/audit/rules.d/50-MAC-policy.rules
     owner: root
     group: root
     mode: '0640'
-    marker: "# {mark} ANSIBLE MANAGED - MAC-policy"
-    block: |
+    content: |
       -w /etc/apparmor/ -p wa -k MAC-policy
       -w /etc/apparmor.d/ -p wa -k MAC-policy
 
 # 35735 - Events that modify the system's network environment
 - name: Ensure network environment modification events are collected
   ansible.builtin.copy:
-    path: /etc/audit/rules.d/50-system-locale.rules
-    create: true
+    dest: /etc/audit/rules.d/50-system-locale.rules
     owner: root
     group: root
     mode: '0640'
-    marker: "# {mark} ANSIBLE MANAGED - system-locale"
-    block: |
+    content: |
       -a always,exit -F arch=b64 -S sethostname,setdomainname -k system-locale
       -a always,exit -F arch=b32 -S sethostname,setdomainname -k system-locale
       -w /etc/issue -p wa -k system-locale
@@ -82,13 +73,11 @@
 # 35737 - Events that modify user/group information
 - name: Ensure user and group modification events are collected
   ansible.builtin.copy:
-    path: /etc/audit/rules.d/50-identity.rules
-    create: true
+    dest: /etc/audit/rules.d/50-identity.rules
     owner: root
     group: root
     mode: '0640'
-    marker: "# {mark} ANSIBLE MANAGED - identity"
-    block: |
+    content: |
       -w /etc/group -p wa -k identity
       -w /etc/passwd -p wa -k identity
       -w /etc/gshadow -p wa -k identity
@@ -98,26 +87,22 @@
 # 35742 - File deletion events by users
 - name: Ensure file deletion events by users are collected
   ansible.builtin.copy:
-    path: /etc/audit/rules.d/50-delete.rules
-    create: true
+    dest: /etc/audit/rules.d/50-delete.rules
     owner: root
     group: root
     mode: '0640'
-    marker: "# {mark} ANSIBLE MANAGED - delete"
-    block: |
+    content: |
       -a always,exit -F arch=b64 -S unlink,unlinkat,rename,renameat -F auid>=1000 -F auid!=unset -k delete
       -a always,exit -F arch=b32 -S unlink,unlinkat,rename,renameat -F auid>=1000 -F auid!=unset -k delete
 
-# Fixed version of your original user_emulation task
+# User emulation events
 - name: Ensure user emulation events are collected
   ansible.builtin.copy:
-    path: /etc/audit/rules.d/50-user_emulation.rules
-    create: true
+    dest: /etc/audit/rules.d/50-user_emulation.rules
     owner: root
     group: root
     mode: '0640'
-    marker: "# {mark} ANSIBLE MANAGED - user_emulation"
-    block: |
+    content: |
       -a always,exit -F arch=b64 -C euid!=uid -F auid!=unset -S execve -k user_emulation
       -a always,exit -F arch=b32 -C euid!=uid -F auid!=unset -S execve -k user_emulation
 
