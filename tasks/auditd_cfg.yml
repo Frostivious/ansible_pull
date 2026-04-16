@@ -7,7 +7,7 @@
 
 # 35738 - Discretionary access control permission modification events
 - name: Ensure permission modification events are collected
-  ansible.builtin.blockinfile:
+  ansible.builtin.copy:
     path: /etc/audit/rules.d/50-perm_mod.rules
     create: true
     owner: root
@@ -24,7 +24,7 @@
 
 # 35734 - Events that modify date and time information
 - name: Ensure date and time modification events are collected
-  ansible.builtin.blockinfile:
+  ansible.builtin.copy:
     path: /etc/audit/rules.d/50-time-change.rules
     create: true
     owner: root
@@ -38,7 +38,7 @@
 
 # 35733 - Events that modify the sudo log file
 - name: Ensure sudo log file modification events are collected
-  ansible.builtin.blockinfile:
+  ansible.builtin.copy:
     path: /etc/audit/rules.d/50-sudo.rules
     create: true
     owner: root
@@ -50,7 +50,7 @@
 
 # 35743 - Events that modify Mandatory Access Controls
 - name: Ensure MAC modification events are collected
-  ansible.builtin.blockinfile:
+  ansible.builtin.copy:
     path: /etc/audit/rules.d/50-MAC-policy.rules
     create: true
     owner: root
@@ -63,7 +63,7 @@
 
 # 35735 - Events that modify the system's network environment
 - name: Ensure network environment modification events are collected
-  ansible.builtin.blockinfile:
+  ansible.builtin.copy:
     path: /etc/audit/rules.d/50-system-locale.rules
     create: true
     owner: root
@@ -81,7 +81,7 @@
 
 # 35737 - Events that modify user/group information
 - name: Ensure user and group modification events are collected
-  ansible.builtin.blockinfile:
+  ansible.builtin.copy:
     path: /etc/audit/rules.d/50-identity.rules
     create: true
     owner: root
@@ -97,7 +97,7 @@
 
 # 35742 - File deletion events by users
 - name: Ensure file deletion events by users are collected
-  ansible.builtin.blockinfile:
+  ansible.builtin.copy:
     path: /etc/audit/rules.d/50-delete.rules
     create: true
     owner: root
@@ -110,7 +110,7 @@
 
 # Fixed version of your original user_emulation task
 - name: Ensure user emulation events are collected
-  ansible.builtin.blockinfile:
+  ansible.builtin.copy:
     path: /etc/audit/rules.d/50-user_emulation.rules
     create: true
     owner: root
