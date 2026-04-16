@@ -62,5 +62,5 @@
     name="/dev/shm"
     src={{ mount_points.dev_shm }}
     state=mounted
-    fstype=ext4
+    fstype=tmpfs
     opts="nodev,nosuid,noexec"
