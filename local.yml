@@ -26,3 +26,5 @@
     - include_tasks: tasks/auditd_cfg.yml
     - include_tasks: tasks/shadow_cfg.yml
     - include_tasks: tasks/file_sync.yml
+    - include_tasks: tasks/apparmor_cfg.yml
+    - include_tasks: tasks/passwd_cfg.yml

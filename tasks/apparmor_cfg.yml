@@ -1,0 +1,16 @@
+- name: Find all AppArmor profiles
+  ansible.builtin.find:
+    paths: /etc/apparmor.d/
+    file_type: file
+    recurse: false
+  register: apparmor_profiles
+
+- name: Enforce all AppArmor profiles
+  ansible.builtin.command:
+    cmd: "aa-enforce {{ item.path }}"
+  loop: "{{ apparmor_profiles.files }}"
+  register: aa_enforce_result
+  changed_when: "'Setting' in aa_enforce_result.stdout"
+  failed_when: aa_enforce_result.rc != 0
+
+

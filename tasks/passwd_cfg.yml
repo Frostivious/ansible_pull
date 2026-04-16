@@ -1,0 +1,74 @@
+# 35676 - Ensure password failed attempts lockout is configured
+- name: Set faillock deny attempts
+  ansible.builtin.lineinfile:
+    path: /etc/security/faillock.conf
+    regexp: '^deny\s*='
+    line: deny = 5
+    state: present
+
+# 35677 - Ensure password unlock time is configured
+- name: Set faillock unlock time
+  ansible.builtin.lineinfile:
+    path: /etc/security/faillock.conf
+    regexp: '^unlock_time\s*='
+    line: unlock_time = 900
+    state: present
+
+# 35678 - Ensure password failed attempts lockout includes root account
+- name: Set faillock even_deny_root
+  ansible.builtin.lineinfile:
+    path: /etc/security/faillock.conf
+    regexp: '^even_deny_root'
+    line: even_deny_root
+    state: present
+
+# /etc/security/pwquality.conf settings
+# 35679 - Ensure password number of changed characters is configured
+- name: Set pwquality difok
+  ansible.builtin.lineinfile:
+    path: /etc/security/pwquality.conf
+    regexp: '^difok\s*='
+    line: difok = 2
+    state: present
+
+# 35680 - Ensure minimum password length is configured
+- name: Set pwquality minlen
+  ansible.builtin.lineinfile:
+    path: /etc/security/pwquality.conf
+    regexp: '^minlen\s*='
+    line: minlen = 14
+    state: present
+
+# 35681 - Ensure password complexity is configured
+- name: Set pwquality minclass
+  ansible.builtin.lineinfile:
+    path: /etc/security/pwquality.conf
+    regexp: '^minclass\s*='
+    line: minclass = 4
+    state: present
+
+# 35682 - Ensure password same consecutive characters is configured
+- name: Set pwquality maxrepeat
+  ansible.builtin.lineinfile:
+    path: /etc/security/pwquality.conf
+    regexp: '^maxrepeat\s*='
+    line: maxrepeat = 3
+    state: present
+
+# 35683 - Ensure password maximum sequential characters is configured
+- name: Set pwquality maxsequence
+  ansible.builtin.lineinfile:
+    path: /etc/security/pwquality.conf
+    regexp: '^maxsequence\s*='
+    line: maxsequence = 3
+    state: present
+
+# /etc/pam.d/common-password settings
+# 35687 - Ensure password history remember is configured
+# 35688 - Ensure password history is enforced for the root user
+- name: Ensure pam_pwhistory is configured with remember and enforce_for_root
+  ansible.builtin.lineinfile:
+    path: /etc/pam.d/common-password
+    regexp: '^password.*pam_pwhistory\.so'
+    line: password required pam_pwhistory.so remember=24 enforce_for_root use_authtok
+    state: present

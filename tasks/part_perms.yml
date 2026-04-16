@@ -7,6 +7,7 @@
       var_log: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/log') | map(attribute='device') | first }}"
       var_log_audit: "{{ ansible_mounts | selectattr('mount', 'equalto', '/var/log/audit') | map(attribute='device') | first }}"
       home: "{{ ansible_mounts | selectattr('mount', 'equalto', '/home') | map(attribute='device') | first }}"
+      dev_shm: "{{ ansible_mounts | selectattr('mount', 'equalto', '/dev/shm') | map(attribute='device') | first }}"
 
 - name: Sets nodev, no suid, noexec for /tmp
   mount: >
@@ -52,6 +53,14 @@
   mount: >
     name="/home"
     src={{ mount_points.home }}
+    state=mounted
+    fstype=ext4
+    opts="nodev,nosuid,noexec"
+
+- name: Sets nodev, no suid, for /dev/shm
+  mount: >
+    name="/dev/shm"
+    src={{ mount_points.dev_shm }}
     state=mounted
     fstype=ext4
     opts="nodev,nosuid,noexec"
