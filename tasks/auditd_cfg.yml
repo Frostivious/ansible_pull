@@ -106,6 +106,144 @@
       -a always,exit -F arch=b64 -C euid!=uid -F auid!=unset -S execve -k user_emulation
       -a always,exit -F arch=b32 -C euid!=uid -F auid!=unset -S execve -k user_emulation
 
+# 35730 - Ensure system warns when audit logs are low on space
+- name: Set auditd space_left_action to warn
+  ansible.builtin.lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^space_left_action\s*='
+    line: space_left_action = SYSLOG
+    state: present
+
+- name: Set auditd admin_space_left_action to halt
+  ansible.builtin.lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^admin_space_left_action\s*='
+    line: admin_space_left_action = HALT
+    state: present
+
+# 35731 - Ensure changes to system administration scope (sudoers) is collected
+- name: Ensure sudoers changes are collected
+  ansible.builtin.copy:
+    dest: /etc/audit/rules.d/50-scope.rules
+    owner: root
+    group: root
+    mode: '0640'
+    content: |
+      -w /etc/sudoers -p wa -k scope
+      -w /etc/sudoers.d/ -p wa -k scope
+
+# 35736 - Ensure unsuccessful file access attempts are collected
+- name: Ensure unsuccessful file access attempts are collected
+  ansible.builtin.copy:
+    dest: /etc/audit/rules.d/50-access.rules
+    owner: root
+    group: root
+    mode: '0640'
+    content: |
+      -a always,exit -F arch=b64 -S creat,open,openat,truncate,ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=unset -k access
+      -a always,exit -F arch=b32 -S creat,open,openat,truncate,ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=unset -k access
+      -a always,exit -F arch=b64 -S creat,open,openat,truncate,ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=unset -k access
+      -a always,exit -F arch=b32 -S creat,open,openat,truncate,ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=unset -k access
+
+# 35739 - Ensure successful file system mounts are collected
+- name: Ensure successful file system mounts are collected
+  ansible.builtin.copy:
+    dest: /etc/audit/rules.d/50-mounts.rules
+    owner: root
+    group: root
+    mode: '0640'
+    content: |
+      -a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=unset -k mounts
+      -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=unset -k mounts
+
+# 35740 - Ensure session initiation information is collected
+- name: Ensure session initiation information is collected
+  ansible.builtin.copy:
+    dest: /etc/audit/rules.d/50-session.rules
+    owner: root
+    group: root
+    mode: '0640'
+    content: |
+      -w /var/run/utmp -p wa -k session
+      -w /var/log/wtmp -p wa -k session
+      -w /var/log/btmp -p wa -k session
+
+# 35741 - Ensure login and logout events are collected
+- name: Ensure login and logout events are collected
+  ansible.builtin.copy:
+    dest: /etc/audit/rules.d/50-logins.rules
+    owner: root
+    group: root
+    mode: '0640'
+    content: |
+      -w /var/log/lastlog -p wa -k logins
+      -w /var/run/faillock -p wa -k logins
+
+# 35744 - Ensure chcon command attempts are collected
+- name: Ensure chcon command attempts are collected
+  ansible.builtin.copy:
+    dest: /etc/audit/rules.d/50-perm_chng.rules
+    owner: root
+    group: root
+    mode: '0640'
+    content: |
+      -a always,exit -F path=/usr/bin/chcon -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
+
+# 35745 - Ensure setfacl command attempts are collected
+- name: Ensure setfacl command attempts are collected
+  ansible.builtin.copy:
+    dest: /etc/audit/rules.d/50-perm_acl.rules
+    owner: root
+    group: root
+    mode: '0640'
+    content: |
+      -a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_acl
+
+# 35746 - Ensure chacl command attempts are collected
+- name: Ensure chacl command attempts are collected
+  ansible.builtin.copy:
+    dest: /etc/audit/rules.d/50-perm_chacl.rules
+    owner: root
+    group: root
+    mode: '0640'
+    content: |
+      -a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_chacl
+
+# 35747 - Ensure usermod command attempts are collected
+- name: Ensure usermod command attempts are collected
+  ansible.builtin.copy:
+    dest: /etc/audit/rules.d/50-usermod.rules
+    owner: root
+    group: root
+    mode: '0640'
+    content: |
+      -a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>=1000 -F auid!=unset -k usermod
+
+# 35748 - Ensure kernel module loading, unloading and modification is collected
+- name: Ensure kernel module modification events are collected
+  ansible.builtin.copy:
+    dest: /etc/audit/rules.d/50-modules.rules
+    owner: root
+    group: root
+    mode: '0640'
+    content: |
+      -a always,exit -F arch=b64 -S init_module,finit_module,delete_module,create_module,query_module -F auid!=unset -k kernel_modules
+      -a always,exit -F arch=b32 -S init_module,finit_module,delete_module,create_module,query_module -F auid!=unset -k kernel_modules
+      -w /sbin/insmod -p x -k kernel_modules
+      -w /sbin/rmmod -p x -k kernel_modules
+      -w /sbin/modprobe -p x -k kernel_modules
+
+# 35749 - Ensure the audit configuration is immutable
+# IMPORTANT: This must be the last rule file loaded - prefix 99 ensures it loads last
+- name: Ensure audit configuration is immutable
+  ansible.builtin.copy:
+    dest: /etc/audit/rules.d/99-finalize.rules
+    owner: root
+    group: root
+    mode: '0640'
+    content: |
+      -e 2
+
 # Reload audit rules after all changes
 - name: Load updated audit rules
   ansible.builtin.command:
