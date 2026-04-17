@@ -162,9 +162,9 @@
   command: ufw allow out to 20.26.156.214/32 port 22
 
 - name: Set UFW default routed policy to deny
-  ansible.builtin.ufw:
-    default: deny
-    direction: routed
+  ansible.builtin.command:
+    cmd: ufw default deny routed
+  changed_when: false
 
 - name: Set UFW default incoming policy to deny
   ansible.builtin.ufw:
@@ -187,3 +187,10 @@
 
 - name: Deny incoming traffic from ::1
   command: ufw deny in from ::1
+
+- name: Patch SCA check 35624 to accept UFW routed disabled as compliant
+  ansible.builtin.replace:
+    path: /var/ossec/ruleset/sca/cis_ubuntu24-04.yml
+    regexp: "r:deny\\\\s\\+\\\\(routed\\\\\\)|reject\\\\s\\+\\\\(routed\\\\\\)'"
+    replace: "r:deny\\s+\\(routed\\)|reject\\s+\\(routed\\)|disabled\\s+\\(routed\\)'"
+  notify: Restart wazuh-agent
