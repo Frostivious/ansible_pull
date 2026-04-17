@@ -12,6 +12,9 @@
       - ufw
       - libpam-pwquality
       - systemd-journal-remote
+      - aide
+      - aide-common
+
 
 - name: Remove Packages
   apt:
@@ -25,6 +28,7 @@
       - nftables
       - rsync
       - gdm3
+      - iptables-persistent
 
     state: absent
 
