@@ -204,7 +204,6 @@
     search_string: '      - "c:dpkg -s nftables -> r:Status: install ok installed"'
     line: '      - "c:dpkg -s ufw -> r:Status: install ok installed"'
     state: present
-  notify: Restart wazuh-agent
 
 # 35626 - ufw uninstalled or disabled with nftables (not applicable with UFW)
 - name: Patch SCA 35626 - ufw with nftables not applicable with UFW
@@ -213,7 +212,6 @@
     search_string: '      - "not c:dpkg-query -W -f=''${binary:Package}\t${Status}\t${db:Status-Status}\n'' ufw -> r:install ok installed"'
     line: '      - "c:dpkg -s ufw -> r:Status: install ok installed"'
     state: present
-  notify: Restart wazuh-agent
 
 # 35627 - iptables flushed with nftables (condition:none - fails because UFW uses iptables)
 - name: Patch SCA 35627 - iptables flush not applicable with UFW
@@ -222,7 +220,6 @@
     search_string: "      - 'c:iptables -L -> r:Chain INPUT'"
     line: "      - 'c:dpkg -s ufw -> r:Status: install ok installed'"
     state: present
-  notify: Restart wazuh-agent
 
 # 35633 - iptables packages installed (not applicable with UFW)
 - name: Patch SCA 35633 - iptables packages not applicable with UFW
@@ -231,7 +228,6 @@
     search_string: '      - "c:dpkg -s iptables-persistent -> r:Status: install ok installed"'
     line: '      - "c:dpkg -s ufw -> r:Status: install ok installed"'
     state: present
-  notify: Restart wazuh-agent
 
 # 35635 - ufw not in use with iptables (not applicable with UFW)
 - name: Patch SCA 35635 - ufw not in use with iptables not applicable with UFW
@@ -240,7 +236,6 @@
     search_string: '      - "not c:dpkg-query -s ufw -> r:install ok installed"'
     line: '      - "c:dpkg -s ufw -> r:Status: install ok installed"'
     state: present
-  notify: Restart wazuh-agent
 
 # 35637 - iptables loopback (not applicable with UFW)
 - name: Patch SCA 35637 - iptables loopback not applicable with UFW
@@ -249,7 +244,6 @@
     search_string: "      - 'c:iptables -L INPUT -v -n -> r:\\.*ACCEPT\\.*all\\.*lo\\.*\\p\\.*0.0.0.0/0\\.*0.0.0.0/0'"
     line: "      - 'c:ufw status -> r:Status:\\s+active'"
     state: present
-  notify: Restart wazuh-agent
 
 # 35639 - ip6tables loopback (not applicable with UFW)
 - name: Patch SCA 35639 - ip6tables loopback not applicable with UFW
@@ -258,9 +252,3 @@
     search_string: "      - 'c:ip6tables -L INPUT -v -n -> r:\\.*ACCEPT\\.*all\\.*lo\\.*\\p\\.*::/0\\.*::/0'"
     line: "      - 'c:ufw status -> r:Status:\\s+active'"
     state: present
-  notify: Restart wazuh-agent
-
-- name: Restart wazuh-agent
-  ansible.builtin.systemd:
-    name: wazuh-agent
-    state: restarted
