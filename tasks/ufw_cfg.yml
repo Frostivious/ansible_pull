@@ -161,14 +161,20 @@
 - name: Allow SSH to (Git)
   command: ufw allow out to 20.26.156.214/32 port 22
 
-- name: Default Deny Incoming
-  command: ufw default deny incoming
+- name: Set UFW default routed policy to deny
+  ansible.builtin.ufw:
+    default: deny
+    direction: routed
 
-- name: Default Deny Outgoing
-  command: ufw default deny outgoing
+- name: Set UFW default incoming policy to deny
+  ansible.builtin.ufw:
+    default: deny
+    direction: incoming
 
-- name: Default Deny Routed
-  command: ufw default deny routed
+- name: Set UFW default outgoing policy to deny
+  ansible.builtin.ufw:
+    default: deny
+    direction: outgoing
 
 - name: Allow incoming loopback traffic
   command: ufw allow in on lo
