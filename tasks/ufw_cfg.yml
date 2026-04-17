@@ -189,8 +189,8 @@
   command: ufw deny in from ::1
 
 - name: Patch SCA check 35624 to accept UFW routed disabled as compliant
-  ansible.builtin.replace:
+  ansible.builtin.lineinfile:
     path: /var/ossec/ruleset/sca/cis_ubuntu24-04.yml
-    regexp: "r:deny\\\\s\\+\\\\(routed\\\\\\)|reject\\\\s\\+\\\\(routed\\\\\\)'"
-    replace: "r:deny\\s+\\(routed\\)|reject\\s+\\(routed\\)|disabled\\s+\\(routed\\)'"
-  notify: Restart wazuh-agent
+    search_string: "r:deny\\s+\\(routed\\)|reject\\s+\\(routed\\)'"
+    line: "      - 'c:ufw status verbose -> r:^Default: && r:deny\\s+\\(routed\\)|reject\\s+\\(routed\\)|disabled\\s+\\(routed\\)'"
+    state: present
